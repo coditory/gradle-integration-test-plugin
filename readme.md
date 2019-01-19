@@ -8,7 +8,7 @@
 **Zero configuration**, **single responsibility** integration test gradle plugin.
 
 - Adds `integrationTest` task that execute tests under `src/integration/*`.
-- Makes `check` task depends on `integrationTest`.
+- Makes `check` task depend on `integrationTest`.
 - Makes integration classpath extend main and test classpaths.
 - If `jacoco` plugin is enabled adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks.
 
