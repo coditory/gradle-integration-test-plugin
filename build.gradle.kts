@@ -1,3 +1,5 @@
+import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
+
 plugins {
   kotlin("jvm") version "1.3.11"
   id("pl.allegro.tech.build.axion-release") version "1.10.0"
@@ -28,6 +30,14 @@ version = scmVersion.version
 scmVersion {
   tag.prefix = project.name
   versionCreator("versionWithBranch")
+  HooksConfig().let {
+    it.pre("fileUpdate", mapOf(
+      "files" to listOf("readme.md") as Any,
+      "pattern" to { previousVersion: String -> previousVersion },
+      "replacement" to { releaseVersion: String -> releaseVersion }
+    ))
+    it.pre("commit")
+  }
 }
 
 tasks {
