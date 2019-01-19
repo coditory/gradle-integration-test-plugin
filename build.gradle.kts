@@ -1,3 +1,5 @@
+import groovy.lang.Closure
+import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 
 plugins {
@@ -26,13 +28,13 @@ dependencies {
 }
 
 scmVersion {
-  tag.prefix = project.name
   versionCreator("versionWithBranch")
-  HooksConfig().let {
+  tag.prefix = project.name
+  hooks = HooksConfig().also {
     it.pre("fileUpdate", mapOf(
       "files" to listOf("readme.md") as Any,
-      "pattern" to { previousVersion: String -> previousVersion },
-      "replacement" to { releaseVersion: String -> releaseVersion }
+      "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ -> v }),
+      "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
     ))
     it.pre("commit")
   }
