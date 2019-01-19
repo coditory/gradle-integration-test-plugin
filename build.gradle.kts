@@ -25,9 +25,6 @@ dependencies {
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
 }
 
-group = "com.coditory.gradle"
-version = scmVersion.version
-
 scmVersion {
   tag.prefix = project.name
   versionCreator("versionWithBranch")
@@ -40,6 +37,9 @@ scmVersion {
     it.pre("commit")
   }
 }
+
+group = "com.coditory.gradle"
+version = scmVersion.version
 
 tasks {
   withType<Test> {
