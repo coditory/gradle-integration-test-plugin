@@ -2,6 +2,7 @@ import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 
 plugins {
   kotlin("jvm") version "1.3.11"
+  id("jacoco")
   id("pl.allegro.tech.build.axion-release") version "1.10.0"
   id("com.github.kt3k.coveralls") version "2.8.2"
   id("com.gradle.plugin-publish") version "0.10.0"
