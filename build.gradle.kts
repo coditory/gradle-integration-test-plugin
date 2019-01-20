@@ -1,4 +1,3 @@
-import groovy.lang.Closure
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 
