@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/coditory/gradle-integration-test-plugin.svg?branch=master)](https://travis-ci.org/coditory/gradle-integration-test-plugin)
-[![Coverage Status](https://coveralls.io/repos/coditory/gradle-integration-test-plugin/badge.svg?branch=development)](https://coveralls.io/r/coditory/gradle-integration-test-plugin)
+[![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-integration-test-plugin)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.coditory.gradle/gradle-integration-test-plugin/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.coditory.gradle/gradle-integration-test-plugin)
 
 **Zero configuration**, **single responsibility** integration test gradle plugin.

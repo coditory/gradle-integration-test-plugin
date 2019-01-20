@@ -58,6 +58,9 @@ tasks {
       html.setEnabled(true)
     }
   }
+  coveralls {
+    sourceDirs = listOf("src/main/kotlin")
+  }
 }
 
 gradlePlugin {
