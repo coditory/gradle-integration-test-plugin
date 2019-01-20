@@ -19,6 +19,6 @@ Add to the `build.gradle`:
 ```
 plugins {
   id 'java'
-  id 'com.coditory.integration-test' version '1.0.4'
+  id 'com.coditory.integration-test' version '1.0.5'
 }
 ```
