@@ -66,12 +66,6 @@ class PluginSetupTest {
         ))
   }
 
-  @Test
-  fun `should not setup integration task when java plugin is disabled`() {
-    val project = SampleProject.createProject(IntegrationTestPlugin::class)
-    assertThat(project.tasks.findByPath(IntegrationTestPlugin.INTEGRATION_TEST_TASK_NAME)).isNull()
-  }
-
   private fun getTestTask(name: String = IntegrationTestPlugin.INTEGRATION_TEST_TASK_NAME): TestTask {
     return project.tasks.getByName(name) as TestTask
   }

@@ -11,11 +11,10 @@ open class IntegrationTestPlugin : Plugin<Project> {
   private val log = LoggerFactory.getLogger(this.javaClass)
 
   override fun apply(project: Project) {
-    if (project.plugins.hasPlugin(JavaPlugin::class.java)) {
-      setupPlugin(project)
-    } else {
-      log.warn("$PLUGIN_ID to work requires 'java' plugin enabled")
+    if (!project.plugins.hasPlugin(JavaPlugin::class.java)) {
+      project.plugins.apply(JavaPlugin::class.java)
     }
+    setupPlugin(project)
   }
 
   private fun setupPlugin(project: Project) {
