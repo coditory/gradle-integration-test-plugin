@@ -52,6 +52,12 @@ tasks {
   withType<Test> {
     useJUnitPlatform()
   }
+  jacocoTestReport {
+    reports {
+      xml.setEnabled(true)
+      html.setEnabled(true)
+    }
+  }
 }
 
 gradlePlugin {
@@ -63,6 +69,8 @@ gradlePlugin {
   }
 }
 
+// Releasing the plugin:
+// ./gradlew release && ./gradlew publishPlugins
 pluginBundle {
   website = "https://github.com/coditory/gradle-integration-test-plugin"
   vcsUrl = "https://github.com/coditory/gradle-integration-test-plugin"
