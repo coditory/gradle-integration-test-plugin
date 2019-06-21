@@ -2,11 +2,11 @@ import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 
 plugins {
-  kotlin("jvm") version "1.3.11"
+  kotlin("jvm") version "1.3.40"
   id("jacoco")
-  id("pl.allegro.tech.build.axion-release") version "1.10.0"
-  id("com.github.kt3k.coveralls") version "2.8.2"
-  id("com.gradle.plugin-publish") version "0.10.0"
+  id("pl.allegro.tech.build.axion-release") version "1.10.1"
+  id("com.github.kt3k.coveralls") version "2.8.4"
+  id("com.gradle.plugin-publish") version "0.10.1"
   id("java-gradle-plugin")
   id("maven-publish")
 }
@@ -20,10 +20,10 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
 
-  testImplementation("org.assertj:assertj-core:3.11.1")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.2")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+  testImplementation("org.assertj:assertj-core:3.12.2")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+  testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 }
 
 scmVersion {
