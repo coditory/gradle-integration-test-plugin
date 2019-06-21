@@ -10,10 +10,10 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 internal class IntegrationTestSetConfigurator(
-    private val project: Project) {
+  private val project: Project) {
 
   fun setupTestSet(taskName: String, configPrefix: String, dirName: String = configPrefix)
-      : TaskProvider<*> {
+    : TaskProvider<*> {
     setupConfiguration(configPrefix)
     val sourceSet = setupSourceSet(dirName)
     return setupTestTask(taskName, sourceSet)
@@ -57,9 +57,11 @@ internal class IntegrationTestSetConfigurator(
       it.classpath = sourceSet.runtimeClasspath
       it.mustRunAfter(JavaPlugin.TEST_TASK_NAME)
     }
-    project.tasks.named(JavaBasePlugin.CHECK_TASK_NAME) {
-      it.dependsOn(integrationTest)
-    }
+    // https://github.com/coditory/gradle-integration-test-plugin/issues/1
+    // project.tasks.named(...) - breaks compatibility with gradle v4
+    project.tasks
+      .filter { it.name == JavaBasePlugin.CHECK_TASK_NAME }
+      .forEach { it.dependsOn(integrationTest) }
     return integrationTest
   }
 }

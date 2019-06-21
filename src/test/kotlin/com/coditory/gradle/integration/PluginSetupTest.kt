@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_CONFIG_PREFIX
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
 import com.coditory.gradle.integration.base.SampleProject
 import com.coditory.gradle.integration.base.SampleProject.createProject
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +25,7 @@ class PluginSetupTest {
 
   @Test
   fun `should configure integration source sets`() {
-    val sourceSet = getSourceSet(IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX)
+    val sourceSet = getSourceSet(INTEGRATION_CONFIG_PREFIX)
     assertThat(sourceSet).isNotNull
     assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(toBuildPath("classes/java/integration"))
     assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(toBuildPath("resources/integration"))
@@ -40,7 +42,7 @@ class PluginSetupTest {
 
   @Test
   fun `should configure integrationTest task`() {
-    val integrationSourceSet = getSourceSet(IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX)
+    val integrationSourceSet = getSourceSet(INTEGRATION_CONFIG_PREFIX)
     val task = getTestTask()
     assertThat(task.testClassesDirs).isNotNull
     assertThat(task.description).isNotEmpty()
@@ -51,7 +53,7 @@ class PluginSetupTest {
 
   @Test
   fun `should add groovy paths to source sets when groovy plugin is enabled`() {
-    val project = SampleProject.createProject(GroovyPlugin::class, IntegrationTestPlugin::class)
+    val project = createProject(GroovyPlugin::class, IntegrationTestPlugin::class)
     assertThat(getSourceSet(project).runtimeClasspath.asPath)
         .isEqualTo(toBuildPath(project,
             "classes/java/integration",
@@ -66,7 +68,7 @@ class PluginSetupTest {
         ))
   }
 
-  private fun getTestTask(name: String = IntegrationTestPlugin.INTEGRATION_TEST_TASK_NAME): TestTask {
+  private fun getTestTask(name: String = INTEGRATION_TEST_TASK_NAME): TestTask {
     return project.tasks.getByName(name) as TestTask
   }
 
@@ -78,11 +80,11 @@ class PluginSetupTest {
     return paths.joinToString(":") { "${project.buildDir}/$it" }
   }
 
-  private fun getSourceSet(name: String = IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX): SourceSet {
+  private fun getSourceSet(name: String = INTEGRATION_CONFIG_PREFIX): SourceSet {
     return getSourceSet(project, name)
   }
 
-  private fun getSourceSet(project: Project, name: String = IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX): SourceSet {
+  private fun getSourceSet(project: Project, name: String = INTEGRATION_CONFIG_PREFIX): SourceSet {
     return project.convention.getPlugin(JavaPluginConvention::class.java)
         .sourceSets.getByName(name)
   }

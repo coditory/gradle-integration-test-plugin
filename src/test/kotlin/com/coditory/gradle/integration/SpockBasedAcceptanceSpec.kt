@@ -3,11 +3,13 @@ package com.coditory.gradle.integration
 import com.coditory.gradle.integration.base.SampleProject.createProjectFile
 import com.coditory.gradle.integration.base.SampleProject.creteBuildGradle
 import org.assertj.core.api.Assertions.assertThat
+import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 class SpockBasedAcceptanceSpec {
   private val projectDir = createTempDir()
@@ -86,15 +88,23 @@ class SpockBasedAcceptanceSpec {
     projectDir.deleteRecursively()
   }
 
-  @Test
-  fun `should run unit tests and integration tests on check command`() {
-    val result = GradleRunner.create()
-      .withProjectDir(projectDir)
-      .withArguments("check", "--debug")
-      .withPluginClasspath()
-      .forwardOutput()
-      .build()
+  @ParameterizedTest
+  @ValueSource(strings = ["current", "4.9"])
+  fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
+    val result = runGradle(listOf("check", "--debug"), gradleVersion)
     assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+  }
+
+  private fun runGradle(arguments: List<String>, gradleVersion: String? = null): BuildResult {
+    val builder = GradleRunner.create()
+      .withProjectDir(projectDir)
+      .withArguments(arguments)
+      .withPluginClasspath()
+      .forwardOutput()
+    if (!gradleVersion.isNullOrBlank() && gradleVersion != "current") {
+      builder.withGradleVersion(gradleVersion)
+    }
+    return builder.build()
   }
 }
