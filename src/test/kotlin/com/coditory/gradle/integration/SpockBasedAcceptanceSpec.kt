@@ -18,18 +18,18 @@ class SpockBasedAcceptanceSpec {
   fun setupProject() {
     creteBuildGradle(projectDir, """
       plugins {
-          id 'groovy'
-          id 'com.coditory.integration-test'
+        id 'groovy'
+        id 'com.coditory.integration-test'
       }
 
       repositories {
-          jcenter()
+        jcenter()
       }
 
       dependencies {
-          testCompile "junit:junit:4.12"
-          testCompile "org.codehaus.groovy:groovy-all:2.4.13"
-          testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+        testCompile "junit:junit:4.12"
+        testCompile "org.codehaus.groovy:groovy-all:2.4.13"
+        testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
       }
     """)
     createProjectFile(projectDir, "src/integration/groovy/TestIntgSpec.groovy", """
