@@ -11,7 +11,7 @@
 - Makes `check` task depend on `integrationTest`.
 - Makes integration classpath extend test and main classpaths (it this order).
 - If `jacoco` plugin is enabled adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks.
-- Tested on gradle version >=4.9
+- Tested on gradle version >=4.9 and 6.0
 
 ## Enabling the plugin
 
