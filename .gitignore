@@ -1,8 +1,10 @@
 # Gradle
 .gradle
-/build/
+build
+!gradle/wrapper/gradle-wrapper.jar
 
 # IntelliJ
-.idea
 out
 *.iml
+.idea/*
+!.idea/codeStyles

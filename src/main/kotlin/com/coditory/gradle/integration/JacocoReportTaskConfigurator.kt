@@ -1,6 +1,7 @@
 package com.coditory.gradle.integration
 
 import org.gradle.api.Project
+import org.gradle.api.reporting.ConfigurableReport
 import org.gradle.api.reporting.Report
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -12,47 +13,62 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 import java.io.File
 
 internal class JacocoReportTaskConfigurator(private val project: Project) {
-  fun configureDefaultJacocoTask(taskProvider: TaskProvider<*>) {
-    addDefaultReportTask(taskProvider)
-    addDefaultCoverageVerificationTask(taskProvider)
-  }
+    fun configureDefaultJacocoTask(taskProvider: TaskProvider<*>) {
+        addDefaultReportTask(taskProvider)
+        addDefaultCoverageVerificationTask(taskProvider)
+    }
 
-  private fun addDefaultReportTask(testTaskProvider: TaskProvider<*>) {
-    project.tasks.register(
-      "jacoco${testTaskProvider.name.capitalize()}Report",
-      JacocoReport::class.java
-    ) {
-      val task = testTaskProvider.get()
-      val extension = project.extensions.getByType(JacocoPluginExtension::class.java)
-      it.group = LifecycleBasePlugin.VERIFICATION_GROUP
-      it.description = "Generates code coverage report for the ${testTaskProvider.name} task."
-      it.executionData(task)
-      it.sourceSets(getMainSourceSet())
-      it.reports.all { report ->
-        if (report.outputType == Report.OutputType.DIRECTORY) {
-          report.setDestination(project.provider { File(extension.reportsDir, testTaskProvider.name + "/" + report.name) })
-        } else {
-          report.setDestination(project.provider { File(extension.reportsDir, testTaskProvider.name + "/" + it.name + "." + report.name) })
+    private fun addDefaultReportTask(testTaskProvider: TaskProvider<*>) {
+        project.tasks.register(
+            "jacoco${testTaskProvider.name.capitalize()}Report",
+            JacocoReport::class.java
+        ) {
+            val task = testTaskProvider.get()
+            val extension: JacocoPluginExtension = project.extensions.getByType(JacocoPluginExtension::class.java)
+            it.group = LifecycleBasePlugin.VERIFICATION_GROUP
+            it.description = "Generates code coverage report for the ${testTaskProvider.name} task."
+            it.executionData(task)
+            it.sourceSets(getMainSourceSet())
+            it.reports.all { report -> setupReportDestination(report, extension, testTaskProvider, it) }
         }
-      }
     }
-  }
 
-  private fun addDefaultCoverageVerificationTask(testTaskProvider: TaskProvider<*>) {
-    project.tasks.register(
-      "jacoco${testTaskProvider.name.capitalize()}CoverageVerification",
-      JacocoCoverageVerification::class.java
+    private fun setupReportDestination(
+        report: ConfigurableReport,
+        extension: JacocoPluginExtension,
+        testTaskProvider: TaskProvider<*>,
+        it: JacocoReport
     ) {
-      it.group = LifecycleBasePlugin.VERIFICATION_GROUP
-      it.description = "Verifies code coverage metrics based on specified rules for the ${testTaskProvider.name} task."
-      it.executionData(testTaskProvider.get())
-      it.sourceSets(getMainSourceSet())
+        if (report.outputType == Report.OutputType.DIRECTORY) {
+            report.setDestination(
+                project.provider {
+                    File(extension.reportsDir, testTaskProvider.name + "/" + report.name)
+                }
+            )
+        } else {
+            report.setDestination(
+                project.provider {
+                    File(extension.reportsDir, testTaskProvider.name + "/" + it.name + "." + report.name)
+                }
+            )
+        }
     }
-  }
 
-  private fun getMainSourceSet(): SourceSet {
-    return project.extensions
-      .getByType(SourceSetContainer::class.java)
-      .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-  }
+    private fun addDefaultCoverageVerificationTask(testTaskProvider: TaskProvider<*>) {
+        project.tasks.register(
+            "jacoco${testTaskProvider.name.capitalize()}CoverageVerification",
+            JacocoCoverageVerification::class.java
+        ) {
+            it.group = LifecycleBasePlugin.VERIFICATION_GROUP
+            it.description = "Verifies code coverage metrics based on specified rules for the ${testTaskProvider.name} task."
+            it.executionData(testTaskProvider.get())
+            it.sourceSets(getMainSourceSet())
+        }
+    }
+
+    private fun getMainSourceSet(): SourceSet {
+        return project.extensions
+            .getByType(SourceSetContainer::class.java)
+            .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+    }
 }
