@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/coditory/gradle-integration-test-plugin.svg?branch=master)](https://travis-ci.org/coditory/gradle-integration-test-plugin)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-integration-test-plugin)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.0.10-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.0-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
@@ -20,7 +20,7 @@ Add to your `build.gradle`:
 
 ```
 plugins {
-  id 'com.coditory.integration-test' version '1.0.10'
+  id 'com.coditory.integration-test' version '1.1.0'
 }
 ```
 
