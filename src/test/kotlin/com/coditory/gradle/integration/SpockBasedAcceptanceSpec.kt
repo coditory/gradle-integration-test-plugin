@@ -1,13 +1,14 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.base.SampleProject.createBuildGradle
 import com.coditory.gradle.integration.base.SampleProject.createProjectFile
-import com.coditory.gradle.integration.base.SampleProject.creteBuildGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
@@ -16,9 +17,9 @@ class SpockBasedAcceptanceSpec {
 
     @BeforeEach
     fun setupProject() {
-        creteBuildGradle(
-            projectDir,
-            """
+        createBuildGradle(
+                projectDir,
+                """
             plugins {
               id 'groovy'
               id 'com.coditory.integration-test'
@@ -36,9 +37,9 @@ class SpockBasedAcceptanceSpec {
             """
         )
         createProjectFile(
-            projectDir,
-            "src/integration/groovy/TestIntgSpec.groovy",
-            """
+                projectDir,
+                "src/integration/groovy/TestIntgSpec.groovy",
+                """
             import spock.lang.Specification
 
             class TestIntgSpec extends Specification {
@@ -64,9 +65,9 @@ class SpockBasedAcceptanceSpec {
             """
         )
         createProjectFile(
-            projectDir,
-            "src/test/groovy/TestUnitSpec.groovy",
-            """
+                projectDir,
+                "src/test/groovy/TestUnitSpec.groovy",
+                """
             import spock.lang.Specification
 
             class TestUnitSpec extends Specification {
@@ -99,7 +100,7 @@ class SpockBasedAcceptanceSpec {
         projectDir.deleteRecursively()
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle v{0}")
     @ValueSource(strings = ["current", "4.9"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         val result = runGradle(listOf("check", "--debug"), gradleVersion)
@@ -107,12 +108,47 @@ class SpockBasedAcceptanceSpec {
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 
+    @Test
+    fun `should not run integration tests during test task`() {
+        val result = runGradle(listOf("test"))
+        assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integrationTest")?.outcome).isNull()
+    }
+
+    @Test
+    fun `should run integration tests and unit tests during testAll task`() {
+        val result = runGradle(listOf("testAll"))
+        assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun `should skip integration tests`() {
+        val result = runGradle(listOf("check", "-PskipIntegrationTest"))
+        assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+    }
+
+    @Test
+    fun `should skip all tests`() {
+        val result = runGradle(listOf("check", "-PskipTestAll"))
+        assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+    }
+
+    @Test
+    fun `should skip unit tests`() {
+        val result = runGradle(listOf("check", "-PskipTest"))
+        assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
     private fun runGradle(arguments: List<String>, gradleVersion: String? = null): BuildResult {
         val builder = GradleRunner.create()
-            .withProjectDir(projectDir)
-            .withArguments(arguments)
-            .withPluginClasspath()
-            .forwardOutput()
+                .withProjectDir(projectDir)
+                .withArguments(arguments)
+                .withPluginClasspath()
+                .forwardOutput()
         if (!gradleVersion.isNullOrBlank() && gradleVersion != "current") {
             builder.withGradleVersion(gradleVersion)
         }

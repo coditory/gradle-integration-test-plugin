@@ -6,7 +6,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.junit.jupiter.api.Test
 
-class JacocoTasksRegistrationTest {
+class JacocoReportTaskConfigurationSpec {
     @Test
     fun `should register jacoco integrationTest tasks when jacoco plugin is enabled`() {
         val project = createProject(JavaPlugin::class, JacocoPlugin::class, IntegrationTestPlugin::class)

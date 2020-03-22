@@ -3,7 +3,6 @@ package com.coditory.gradle.integration
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.TaskProvider
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 open class IntegrationTestPlugin : Plugin<Project> {
@@ -15,25 +14,21 @@ open class IntegrationTestPlugin : Plugin<Project> {
     }
 
     private fun setupPlugin(project: Project) {
-        val testTaskProvider = setupTestTask(project)
+        IntegrationTestTaskConfiguration.apply(project)
+        TestTaskConfiguration.apply(project)
+        TestAllTaskConfiguration.apply(project)
         if (project.plugins.hasPlugin(JacocoPlugin::class.java)) {
-            setupJacocoTasks(testTaskProvider, project)
+            JacocoReportTaskConfiguration.apply(project)
         }
-    }
-
-    private fun setupTestTask(project: Project): TaskProvider<*> {
-        return IntegrationTestSetConfigurator(project)
-            .setupTestSet(INTEGRATION_TEST_TASK_NAME, INTEGRATION_CONFIG_PREFIX)
-    }
-
-    private fun setupJacocoTasks(taskProvider: TaskProvider<*>, project: Project) {
-        JacocoReportTaskConfigurator(project)
-            .configureDefaultJacocoTask(taskProvider)
     }
 
     companion object {
         const val PLUGIN_ID = "com.coditory.integration-test"
-        const val INTEGRATION_TEST_TASK_NAME = "integrationTest"
         const val INTEGRATION_CONFIG_PREFIX = "integration"
+        const val INTEGRATION_TEST_TASK_NAME = "integrationTest"
+        const val TEST_ALL_TASK_NAME = "testAll"
+        const val SKIP_TEST_FLAG_NAME = "skipTest"
+        const val SKIP_TEST_ALL_FLAG_NAME = "skipTestAll"
+        const val SKIP_INTEGRATION_TEST_FLAG_NAME = "skipIntegrationTest"
     }
 }

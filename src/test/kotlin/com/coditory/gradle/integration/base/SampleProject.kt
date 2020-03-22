@@ -14,7 +14,7 @@ object SampleProject {
         return project
     }
 
-    fun creteBuildGradle(projectDir: File, content: String): File {
+    fun createBuildGradle(projectDir: File, content: String): File {
         val buildFile = projectDir.resolve("build.gradle")
         buildFile.writeText(content.trimIndent().trim())
         return buildFile
