@@ -2,14 +2,14 @@ import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
     id("jacoco")
-    id("pl.allegro.tech.build.axion-release") version "1.10.2"
-    id("com.github.kt3k.coveralls") version "2.8.4"
+    id("pl.allegro.tech.build.axion-release") version "1.11.0"
+    id("com.github.kt3k.coveralls") version "2.10.1"
     id("com.gradle.plugin-publish") version "0.10.1"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "9.1.1"
+    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
 }
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 
 ktlint {
-    version.set("0.34.2")
+    version.set("0.36.0")
     enableExperimentalRules.set(true)
 }
 
@@ -26,10 +26,10 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    testImplementation("org.assertj:assertj-core:3.14.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.5.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    testImplementation("org.assertj:assertj-core:3.15.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 }
 
 scmVersion {
