@@ -12,6 +12,6 @@ class PluginSetupSpec {
     @Test
     fun `should register plugin`() {
         assertThat(project.plugins.getPlugin(IntegrationTestPlugin.PLUGIN_ID))
-                .isInstanceOf(IntegrationTestPlugin::class.java)
+            .isInstanceOf(IntegrationTestPlugin::class.java)
     }
 }

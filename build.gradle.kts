@@ -81,6 +81,8 @@ gradlePlugin {
     }
 }
 
+// Marking new version (incrementPatch [default], incrementMinor, incrementMajor)
+// ./gradlew markNextVersion -Prelease.incrementer=incrementMinor
 // Releasing the plugin:
 // ./gradlew release && ./gradlew publishPlugins
 pluginBundle {

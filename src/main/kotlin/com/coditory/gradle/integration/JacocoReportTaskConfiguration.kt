@@ -22,8 +22,8 @@ internal object JacocoReportTaskConfiguration {
 
     private fun addDefaultReportTask(project: Project, task: Task) {
         project.tasks.register(
-                "jacoco${task.name.capitalize()}Report",
-                JacocoReport::class.java
+            "jacoco${task.name.capitalize()}Report",
+            JacocoReport::class.java
         ) {
             val extension: JacocoPluginExtension = project.extensions.getByType(JacocoPluginExtension::class.java)
             it.group = LifecycleBasePlugin.VERIFICATION_GROUP
@@ -35,31 +35,31 @@ internal object JacocoReportTaskConfiguration {
     }
 
     private fun setupReportDestination(
-            report: ConfigurableReport,
-            extension: JacocoPluginExtension,
-            project: Project,
-            task: Task,
-            it: JacocoReport
+        report: ConfigurableReport,
+        extension: JacocoPluginExtension,
+        project: Project,
+        task: Task,
+        it: JacocoReport
     ) {
         if (report.outputType == Report.OutputType.DIRECTORY) {
             report.setDestination(
-                    project.provider {
-                        File(extension.reportsDir, task.name + "/" + report.name)
-                    }
+                project.provider {
+                    File(extension.reportsDir, task.name + "/" + report.name)
+                }
             )
         } else {
             report.setDestination(
-                    project.provider {
-                        File(extension.reportsDir, task.name + "/" + it.name + "." + report.name)
-                    }
+                project.provider {
+                    File(extension.reportsDir, task.name + "/" + it.name + "." + report.name)
+                }
             )
         }
     }
 
     private fun addDefaultCoverageVerificationTask(project: Project, task: Task) {
         project.tasks.register(
-                "jacoco${task.name.capitalize()}CoverageVerification",
-                JacocoCoverageVerification::class.java
+            "jacoco${task.name.capitalize()}CoverageVerification",
+            JacocoCoverageVerification::class.java
         ) {
             it.group = LifecycleBasePlugin.VERIFICATION_GROUP
             it.description = "Verifies code coverage metrics based on specified rules for the ${task.name} task."
@@ -70,7 +70,7 @@ internal object JacocoReportTaskConfiguration {
 
     private fun getMainSourceSet(project: Project): SourceSet {
         return project.extensions
-                .getByType(SourceSetContainer::class.java)
-                .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+            .getByType(SourceSetContainer::class.java)
+            .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
     }
 }

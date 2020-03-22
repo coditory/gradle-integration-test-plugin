@@ -24,15 +24,18 @@ class IntegrationTestTaskConfigurationSpec {
         assertThat(sourceSet).isNotNull
         assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(toBuildPath("classes/java/integration"))
         assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(toBuildPath("resources/integration"))
+        val expectedBuildPath = toBuildPath(
+            listOf(
+                "classes/java/integration",
+                "resources/integration",
+                "classes/java/test",
+                "resources/test",
+                "classes/java/main",
+                "resources/main"
+            )
+        )
         assertThat(sourceSet.runtimeClasspath.asPath)
-                .isEqualTo(toBuildPath(listOf(
-                        "classes/java/integration",
-                        "resources/integration",
-                        "classes/java/test",
-                        "resources/test",
-                        "classes/java/main",
-                        "resources/main"
-                )))
+            .isEqualTo(expectedBuildPath)
     }
 
     @Test
@@ -51,26 +54,30 @@ class IntegrationTestTaskConfigurationSpec {
     fun `should configure integrationTest task to run after check`() {
         val checkTask = project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
         val dependencies = checkTask.dependsOn
-                .filterIsInstance<TaskProvider<*>>()
-                .map { it.name }
+            .filterIsInstance<TaskProvider<*>>()
+            .map { it.name }
         assertThat(dependencies).contains(INTEGRATION_TEST_TASK_NAME)
     }
 
     @Test
     fun `should add groovy paths to source sets when groovy plugin is enabled`() {
         val project = createProject(GroovyPlugin::class, IntegrationTestPlugin::class)
+        val expectedBuildPath = toBuildPath(
+            listOf(
+                "classes/java/integration",
+                "classes/groovy/integration",
+                "resources/integration",
+                "classes/java/test",
+                "classes/groovy/test",
+                "resources/test",
+                "classes/java/main",
+                "classes/groovy/main",
+                "resources/main"
+            ),
+            project
+        )
         assertThat(getSourceSet(project).runtimeClasspath.asPath)
-                .isEqualTo(toBuildPath(listOf(
-                        "classes/java/integration",
-                        "classes/groovy/integration",
-                        "resources/integration",
-                        "classes/java/test",
-                        "classes/groovy/test",
-                        "resources/test",
-                        "classes/java/main",
-                        "classes/groovy/main",
-                        "resources/main"
-                ), project))
+            .isEqualTo(expectedBuildPath)
     }
 
     private fun getTestTask(): TestTask {
@@ -87,6 +94,6 @@ class IntegrationTestTaskConfigurationSpec {
 
     private fun getSourceSet(project: Project = this.project): SourceSet {
         return project.convention.getPlugin(JavaPluginConvention::class.java)
-                .sourceSets.getByName(INTEGRATION_CONFIG_PREFIX)
+            .sourceSets.getByName(INTEGRATION_CONFIG_PREFIX)
     }
 }

@@ -7,8 +7,8 @@ import org.gradle.api.Project
 
 internal object TestSkippingConditions {
     fun skipTestAll(project: Project): Boolean {
-        return hasTestAllFlag(project)
-                || (hasSkipTestFlag(project) && hasSkipIntegrationTestFlag(project))
+        return hasTestAllFlag(project) ||
+            (hasSkipTestFlag(project) && hasSkipIntegrationTestFlag(project))
     }
 
     fun skipTest(project: Project): Boolean {
@@ -32,8 +32,8 @@ internal object TestSkippingConditions {
     }
 
     private fun hasPropertyFlag(project: Project, name: String): Boolean {
-        if (project.getProperties().containsKey(name)) {
-            val value = project.getProperties().get(name)
+        if (project.properties.containsKey(name)) {
+            val value = project.properties[name]
             return value == null || !value.toString().equals("false", true)
         }
         return false

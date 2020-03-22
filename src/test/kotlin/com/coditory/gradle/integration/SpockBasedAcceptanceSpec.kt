@@ -18,8 +18,8 @@ class SpockBasedAcceptanceSpec {
     @BeforeEach
     fun setupProject() {
         createBuildGradle(
-                projectDir,
-                """
+            projectDir,
+            """
             plugins {
               id 'groovy'
               id 'com.coditory.integration-test'
@@ -37,9 +37,9 @@ class SpockBasedAcceptanceSpec {
             """
         )
         createProjectFile(
-                projectDir,
-                "src/integration/groovy/TestIntgSpec.groovy",
-                """
+            projectDir,
+            "src/integration/groovy/TestIntgSpec.groovy",
+            """
             import spock.lang.Specification
 
             class TestIntgSpec extends Specification {
@@ -65,9 +65,9 @@ class SpockBasedAcceptanceSpec {
             """
         )
         createProjectFile(
-                projectDir,
-                "src/test/groovy/TestUnitSpec.groovy",
-                """
+            projectDir,
+            "src/test/groovy/TestUnitSpec.groovy",
+            """
             import spock.lang.Specification
 
             class TestUnitSpec extends Specification {
@@ -145,10 +145,10 @@ class SpockBasedAcceptanceSpec {
 
     private fun runGradle(arguments: List<String>, gradleVersion: String? = null): BuildResult {
         val builder = GradleRunner.create()
-                .withProjectDir(projectDir)
-                .withArguments(arguments)
-                .withPluginClasspath()
-                .forwardOutput()
+            .withProjectDir(projectDir)
+            .withArguments(arguments)
+            .withPluginClasspath()
+            .forwardOutput()
         if (!gradleVersion.isNullOrBlank() && gradleVersion != "current") {
             builder.withGradleVersion(gradleVersion)
         }
