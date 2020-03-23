@@ -18,7 +18,7 @@
 
 Add to your `build.gradle`:
 
-```
+```gradle
 plugins {
   id 'com.coditory.integration-test' version '1.1.1'
 }
@@ -27,7 +27,7 @@ plugins {
 ## Usage
 
 Running tests:
-```
+```sh
 # Runs tests from /src/test
 ./gradlew test
 
@@ -41,7 +41,7 @@ Running tests:
 ```
 
 Skipping tests:
-```
+```sh
 # Skip all tests
 ./gradlew clean build -x test integrationTest
 # ...or skipTests=true/false
@@ -59,6 +59,6 @@ Skipping tests:
 ```
 
 [Test filtering](https://docs.gradle.org/current/userguide/java_testing.html#test_filtering) is supported as well:
-```
+```sh
 ./gradlew iT --tests com.coditory.SampleTest.shouldWork
 ```
