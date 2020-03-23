@@ -2,7 +2,7 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.TEST_ALL_TASK_NAME
-import com.coditory.gradle.integration.base.SampleProject.createProject
+import com.coditory.gradle.integration.acceptance.SampleProject.createProject
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.Task

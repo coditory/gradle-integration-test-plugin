@@ -1,6 +1,6 @@
 package com.coditory.gradle.integration
 
-import com.coditory.gradle.integration.base.SampleProject.createProject
+import com.coditory.gradle.integration.acceptance.SampleProject.createProject
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin

@@ -27,8 +27,8 @@ open class IntegrationTestPlugin : Plugin<Project> {
         const val INTEGRATION_CONFIG_PREFIX = "integration"
         const val INTEGRATION_TEST_TASK_NAME = "integrationTest"
         const val TEST_ALL_TASK_NAME = "testAll"
-        const val SKIP_TEST_FLAG_NAME = "skipTest"
-        const val SKIP_TEST_ALL_FLAG_NAME = "skipTestAll"
-        const val SKIP_INTEGRATION_TEST_FLAG_NAME = "skipIntegrationTest"
+        const val SKIP_TEST_FLAG_NAME = "skipUnitTests"
+        const val SKIP_TEST_ALL_FLAG_NAME = "skipTests"
+        const val SKIP_INTEGRATION_TEST_FLAG_NAME = "skipIntegrationTests"
     }
 }

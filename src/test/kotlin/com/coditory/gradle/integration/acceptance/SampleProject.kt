@@ -1,4 +1,4 @@
-package com.coditory.gradle.integration.base
+package com.coditory.gradle.integration.acceptance
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

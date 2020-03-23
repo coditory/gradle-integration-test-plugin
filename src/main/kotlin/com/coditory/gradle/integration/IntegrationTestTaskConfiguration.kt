@@ -59,8 +59,7 @@ internal object IntegrationTestTaskConfiguration {
         }
         // https://github.com/coditory/gradle-integration-test-plugin/issues/1
         // project.tasks.named(...) - breaks compatibility with gradle v4
-        project.tasks
-            .filter { it.name == JavaBasePlugin.CHECK_TASK_NAME }
-            .forEach { it.dependsOn(integrationTest) }
+        val checkTask = project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
+        checkTask.dependsOn(integrationTest)
     }
 }

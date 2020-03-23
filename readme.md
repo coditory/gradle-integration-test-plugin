@@ -9,7 +9,7 @@
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
-- Handles flags runtime parameters to skip tests: `skipTest`, `skipIntegrationTest`, `skipTestAll`.
+- Handles flags runtime parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
 - Makes integration classpath extend test classpath and main classpath (it this order).
 - When `jacoco` plugin is enabled adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks.
 - Tested on java 11 and gradle versions: 4.9, 6.2
@@ -33,19 +33,32 @@ Running tests:
 
 # Runs tests /src/integration
 ./gradlew integrationTest
+./gradlew iT
 
 # Runs all tests (/src/test and /src/integration)
 ./gradlew testAll
+./gradlew tA
 ```
 
 Skipping tests:
 ```
+# Skip all tests
+./gradlew clean build -x test integrationTest
+# ...or skipTests=true/false
+./gradlew clean build -PskipTests
+
 # Skip tests from /src/test
-./gradlew clean build -PskipTest
+./gradlew clean build -x test
+# ...or skipUnitTests=true/false
+./gradlew clean build -PskipUnitTests
 
 # Skip tests from /src/integration
-./gradlew clean build -PskipIntegrationTest
+./gradlew clean build -x integrationTest
+# ...or skipIntegrationTests=true/false
+./gradlew clean build -PskipIntegrationTests
+```
 
-# Skip tests from all tests (/src/test and /src/integration)
-./gradlew clean build -PskipTestAll
+[Test filtering](https://docs.gradle.org/current/userguide/java_testing.html#test_filtering) is supported as well:
+```
+./gradlew iT --tests com.coditory.SampleTest.shouldWork
 ```
