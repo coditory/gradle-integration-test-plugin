@@ -43,7 +43,7 @@ scmVersion {
                 "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
             )
         )
-        it.pre("commit")
+        it.pre("commit", KotlinClosure2<String, HookContext, String>({ v, _ -> "Release: $v [ci skip]" }))
     }
 }
 
