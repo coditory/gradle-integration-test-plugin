@@ -1,5 +1,6 @@
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
+import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 plugins {
     kotlin("jvm") version "1.3.70"
@@ -43,7 +44,7 @@ scmVersion {
                 "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
             )
         )
-        it.pre("commit", KotlinClosure2<String, HookContext, String>({ v, _ -> "Release: $v [ci skip]" }))
+        it.pre("commit", KotlinClosure2<String, ScmPosition, String>({ v, _ -> "Release: $v [ci skip]" }))
     }
 }
 
