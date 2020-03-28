@@ -34,7 +34,6 @@ dependencies {
 
 scmVersion {
     versionCreator("versionWithBranch")
-    tag.prefix = project.name
     hooks = HooksConfig().also {
         it.pre(
             "fileUpdate",
