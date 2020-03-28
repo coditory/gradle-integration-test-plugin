@@ -6,7 +6,7 @@ plugins {
     id("jacoco")
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.github.kt3k.coveralls") version "2.10.1"
-    id("com.gradle.plugin-publish") version "0.10.1"
+    id("com.gradle.plugin-publish") version "0.11.0"
     id("java-gradle-plugin")
     id("maven-publish")
     id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
@@ -27,9 +27,9 @@ dependencies {
     implementation(kotlin("reflect"))
 
     testImplementation("org.assertj:assertj-core:3.15.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.1")
 }
 
 scmVersion {

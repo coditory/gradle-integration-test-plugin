@@ -2,21 +2,21 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_CONFIG_PREFIX
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
-import com.coditory.gradle.integration.acceptance.SampleProject.createProject
+import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.createProject
+import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.project
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.plugins.JavaBasePlugin
-import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import org.junit.jupiter.api.Test
 import org.gradle.api.tasks.testing.Test as TestTask
 
 class IntegrationTestTaskConfigurationSpec {
-    private val project: Project = createProject(JavaPlugin::class, IntegrationTestPlugin::class)
+    private val project: Project = createProject()
 
     @Test
     fun `should configure integration source sets`() {
@@ -44,7 +44,7 @@ class IntegrationTestTaskConfigurationSpec {
         val task = getTestTask()
         assertThat(task.testClassesDirs).isNotNull
         assertThat(task.description).isEqualTo("Runs the integration tests.")
-        assertThat(task.group).isEqualTo(LifecycleBasePlugin.VERIFICATION_GROUP)
+        assertThat(task.group).isEqualTo(VERIFICATION_GROUP)
         assertThat(task.testClassesDirs).isEqualTo(integrationSourceSet.output.classesDirs)
         assertThat(task.classpath).isEqualTo(integrationSourceSet.runtimeClasspath)
         assertThat(task.enabled).isEqualTo(true)
@@ -61,7 +61,9 @@ class IntegrationTestTaskConfigurationSpec {
 
     @Test
     fun `should add groovy paths to source sets when groovy plugin is enabled`() {
-        val project = createProject(GroovyPlugin::class, IntegrationTestPlugin::class)
+        val project = project()
+            .withPlugins(GroovyPlugin::class, IntegrationTestPlugin::class)
+            .build()
         val expectedBuildPath = toBuildPath(
             listOf(
                 "classes/java/integration",

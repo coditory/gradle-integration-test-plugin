@@ -1,42 +1,17 @@
 package com.coditory.gradle.integration.acceptance
 
-import com.coditory.gradle.integration.acceptance.SampleProject.createBuildGradle
-import com.coditory.gradle.integration.acceptance.SampleProject.createProjectFile
+import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.project
+import com.coditory.gradle.integration.base.SpecProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
+import org.gradle.api.Project
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class Junit5BasedAcceptanceSpec {
-    private val projectDir = createTempDir()
+    private val project = createProject()
 
-    @BeforeEach
-    fun setupProject() {
-        createBuildGradle(
-            projectDir,
-            """
-            plugins {
-                id 'com.coditory.integration-test'
-            }
-
-            repositories {
-                jcenter()
-            }
-
-            dependencies {
-                testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
-                testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.1"
-            }
-
-            test {
-                useJUnitPlatform()
-            }
-            """
-        )
+    private fun createProject(): Project {
         val commonImports =
             """
             import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,10 +27,29 @@ class Junit5BasedAcceptanceSpec {
                 return Files.readString(path);
             }
             """.trimIndent()
-        createProjectFile(
-            projectDir,
-            "src/integration/java/TestIntgSpec.java",
-            """
+        return project("sample-project")
+            .withBuildGradle(
+                """
+                plugins {
+                    id 'com.coditory.integration-test'
+                }
+    
+                repositories {
+                    jcenter()
+                }
+    
+                dependencies {
+                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
+                    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+                }
+    
+                test {
+                    useJUnitPlatform()
+                }
+                """
+            ).withFile(
+                "src/integration/java/TestIntgSpec.java",
+                """
             $commonImports
 
             public class TestIntgSpec {
@@ -77,11 +71,9 @@ class Junit5BasedAcceptanceSpec {
                 $readFileMethod
             }
             """
-        )
-        createProjectFile(
-            projectDir,
-            "src/test/java/TestUnitSpec.java",
-            """
+            ).withFile(
+                "src/test/java/TestUnitSpec.java",
+                """
             $commonImports
 
             public class TestUnitSpec {
@@ -98,37 +90,20 @@ class Junit5BasedAcceptanceSpec {
                 $readFileMethod
             }
             """
-        )
-        createProjectFile(projectDir, "src/main/resources/a.txt", "main-a")
-        createProjectFile(projectDir, "src/main/resources/b.txt", "main-b")
-        createProjectFile(projectDir, "src/main/resources/c.txt", "main-c")
-        createProjectFile(projectDir, "src/test/resources/b.txt", "test-b")
-        createProjectFile(projectDir, "src/test/resources/c.txt", "test-c")
-        createProjectFile(projectDir, "src/integration/resources/c.txt", "integration-c")
-    }
-
-    @AfterEach
-    fun removeProjectDir() {
-        projectDir.deleteRecursively()
+            ).withFile("src/main/resources/a.txt", "main-a")
+            .withFile("src/main/resources/b.txt", "main-b")
+            .withFile("src/main/resources/c.txt", "main-c")
+            .withFile("src/test/resources/b.txt", "test-b")
+            .withFile("src/test/resources/c.txt", "test-c")
+            .withFile("src/integration/resources/c.txt", "integration-c")
+            .build()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
-        val result = runGradle(listOf("check", "--debug"), gradleVersion)
+        val result = runGradle(project, listOf("check", "--debug"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-    }
-
-    private fun runGradle(arguments: List<String>, gradleVersion: String? = null): BuildResult {
-        val builder = GradleRunner.create()
-            .withProjectDir(projectDir)
-            .withArguments(arguments)
-            .withPluginClasspath()
-            .forwardOutput()
-        if (!gradleVersion.isNullOrBlank() && gradleVersion != "current") {
-            builder.withGradleVersion(gradleVersion)
-        }
-        return builder.build()
     }
 }

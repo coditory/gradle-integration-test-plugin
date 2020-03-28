@@ -1,13 +1,12 @@
 package com.coditory.gradle.integration
 
-import com.coditory.gradle.integration.acceptance.SampleProject.createProject
+import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.createProject
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
 import org.junit.jupiter.api.Test
 
 class PluginSetupSpec {
-    private val project: Project = createProject(JavaPlugin::class, IntegrationTestPlugin::class)
+    private val project: Project = createProject()
 
     @Test
     fun `should register plugin`() {
