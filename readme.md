@@ -23,6 +23,89 @@ plugins {
   id 'com.coditory.integration-test' version '1.1.6'
 }
 ```
+### Sample usages with different test frameworks
+See a [project](https://github.com/coditory/gradle-integration-test-plugin-sample) with all the examples.
+
+<details><summary>Java + Junit4</summary>
+<p>
+
+[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit4)
+```gradle
+plugins {
+    id 'java'
+    id 'com.coditory.integration-test' version '1.1.6'
+}
+
+dependencies {
+    testCompile "junit:junit:4.12"
+}
+```
+</p>
+</details>
+<details><summary>Java + Junit5</summary>
+<p>
+
+[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5)
+```gradle
+plugins {
+    id 'java'
+    id 'com.coditory.integration-test' version '1.1.6'
+}
+
+dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.6.2"
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+```
+</p>
+</details>
+<details><summary>Groovy + Spock</summary>
+<p>
+
+[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/groovy-spock)
+```gradle
+plugins {
+    id 'groovy'
+    id 'com.coditory.integration-test' version '1.1.6'
+}
+
+dependencies {
+    testCompile 'org.spockframework:spock-core:2.0-M2-groovy-3.0'
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+```
+</p>
+</details>
+<details><summary>Kotlin + JUnit5</summary>
+<p>
+
+[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5)
+```gradle
+plugins {
+    kotlin("jvm") version "1.3.70"
+    id("com.coditory.integration-test") version "1.1.6"
+}
+
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.1")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+```
+</p>
+</details>
 
 ## Usage
 
