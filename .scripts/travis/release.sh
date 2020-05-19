@@ -16,13 +16,16 @@ fi
 
 RELEASE_TAG="$(git tag --points-at HEAD | grep -P "^release-\d+(\.\d+){0,2}$")"
 if [[ -n "$RELEASE_TAG" ]]; then
-  echo "Exiting release: Current commmit is already tagged as $RELEASE_TAG"
+  echo "Exiting release: Current commit is already tagged as $RELEASE_TAG"
   exit 0
 fi
 
 # Deduce release version from commit message
 if [[ "$RELEASE" == "AUTO" ]]; then
-  if echo "$TRAVIS_COMMIT_MESSAGE" | grep -P -q '^.*\[ *ci *release *\].*$'; then
+  if echo "$TRAVIS_COMMIT_MESSAGE" | grep -P -q '^.*\[ *ci *release *skip *\].*$'; then
+    echo "Exiting release: Commit message contains release skip command"
+    exit 0
+  elif echo "$TRAVIS_COMMIT_MESSAGE" | grep -P -q '^.*\[ *ci *release *\].*$'; then
     RELEASE="PATCH"
   elif echo "$TRAVIS_COMMIT_MESSAGE" | grep -P -q '^.*\[ *ci *release *minor *\].*$'; then
     RELEASE="MINOR"

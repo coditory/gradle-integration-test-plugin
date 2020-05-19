@@ -37,14 +37,12 @@ internal object IntegrationTestTaskConfiguration {
 
     private fun setupSourceSet(project: Project): SourceSet {
         val javaConvention = project.convention.getPlugin(JavaPluginConvention::class.java)
-        val main = javaConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
         val test = javaConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
         return javaConvention.sourceSets.create(INTEGRATION_CONFIG_PREFIX) {
             it.java.srcDir("src/$INTEGRATION_CONFIG_PREFIX/java")
             it.resources.srcDir("src/$INTEGRATION_CONFIG_PREFIX/resources")
-            it.compileClasspath += project.files(test.output, main.output)
-            it.runtimeClasspath += it.output
-            it.runtimeClasspath += project.files(test.output, main.output)
+            it.compileClasspath += test.compileClasspath
+            it.runtimeClasspath += test.runtimeClasspath
         }
     }
 
@@ -57,8 +55,6 @@ internal object IntegrationTestTaskConfiguration {
             it.mustRunAfter(JavaPlugin.TEST_TASK_NAME)
             it.onlyIf { !skipIntegrationTest(project) }
         }
-        // https://github.com/coditory/gradle-integration-test-plugin/issues/1
-        // project.tasks.named(...) - breaks compatibility with gradle v4
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
             .dependsOn(integrationTest)
     }
