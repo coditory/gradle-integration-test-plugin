@@ -26,10 +26,9 @@ plugins {
 ### Sample usages with different test frameworks
 See a [project](https://github.com/coditory/gradle-integration-test-plugin-sample) with all the examples.
 
-<details><summary>Java + Junit4</summary>
+<details><summary>Java + JUnit4 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit4">project</a>)</summary>
 <p>
 
-[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit4)
 ```gradle
 plugins {
     id 'java'
@@ -42,10 +41,9 @@ dependencies {
 ```
 </p>
 </details>
-<details><summary>Java + Junit5</summary>
+<details><summary>Java + JUnit5 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5">project</a>)</summary>
 <p>
 
-[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5)
 ```gradle
 plugins {
     id 'java'
@@ -63,10 +61,9 @@ tasks.withType(Test) {
 ```
 </p>
 </details>
-<details><summary>Groovy + Spock</summary>
+<details><summary>Groovy + Spock (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/groovy-spock">project</a>)</summary>
 <p>
 
-[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/groovy-spock)
 ```gradle
 plugins {
     id 'groovy'
@@ -83,10 +80,9 @@ tasks.withType(Test) {
 ```
 </p>
 </details>
-<details><summary>Kotlin + JUnit5</summary>
+<details><summary>Kotlin + JUnit5 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5">project</a>)</summary>
 <p>
 
-[Sample project](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5)
 ```gradle
 plugins {
     kotlin("jvm") version "1.3.70"
