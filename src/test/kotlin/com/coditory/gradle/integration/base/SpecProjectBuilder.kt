@@ -51,6 +51,12 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
+    fun withDirectory(path: String): SpecProjectBuilder {
+        val filePath = project.rootDir.resolve(path).toPath()
+        Files.createDirectories(filePath)
+        return this
+    }
+
     fun build(): Project {
         return project
     }

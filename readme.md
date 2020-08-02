@@ -9,10 +9,11 @@
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
-- Handles flags runtime parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
+- Handles runtime flags parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
 - Makes integration classpath extend test classpath and main classpath (it this order).
-- When `jacoco` plugin is enabled adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks.
-- Tested on java 11 and gradle versions: 4.9, 6.2
+- Adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks (only when `jacoco` plugin is enabled).
+- Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
+- Tested on java 11 and gradle versions: 4.9, 6.2, 6.5
 
 ## Enabling the plugin
 

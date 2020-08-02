@@ -17,6 +17,7 @@ open class IntegrationTestPlugin : Plugin<Project> {
         IntegrationTestTaskConfiguration.apply(project)
         TestTaskConfiguration.apply(project)
         TestAllTaskConfiguration.apply(project)
+        IdeaPluginConfiguration.apply(project)
         if (project.plugins.hasPlugin(JacocoPlugin::class.java)) {
             JacocoReportTaskConfiguration.apply(project)
         }
