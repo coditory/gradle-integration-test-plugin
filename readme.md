@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.com/coditory/gradle-integration-test-plugin.svg?branch=master)](https://travis-ci.com/coditory/gradle-integration-test-plugin)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-integration-test-plugin)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.6-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.7-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
@@ -21,7 +21,7 @@ Add to your `build.gradle`:
 
 ```gradle
 plugins {
-  id 'com.coditory.integration-test' version '1.1.6'
+  id 'com.coditory.integration-test' version '1.1.7'
 }
 ```
 ### Sample usages with different test frameworks
@@ -33,7 +33,7 @@ See a [project](https://github.com/coditory/gradle-integration-test-plugin-sampl
 ```gradle
 plugins {
     id 'java'
-    id 'com.coditory.integration-test' version '1.1.6'
+    id 'com.coditory.integration-test' version '1.1.7'
 }
 
 dependencies {
@@ -48,7 +48,7 @@ dependencies {
 ```gradle
 plugins {
     id 'java'
-    id 'com.coditory.integration-test' version '1.1.6'
+    id 'com.coditory.integration-test' version '1.1.7'
 }
 
 dependencies {
@@ -68,7 +68,7 @@ tasks.withType(Test) {
 ```gradle
 plugins {
     id 'groovy'
-    id 'com.coditory.integration-test' version '1.1.6'
+    id 'com.coditory.integration-test' version '1.1.7'
 }
 
 dependencies {
@@ -87,7 +87,7 @@ tasks.withType(Test) {
 ```gradle
 plugins {
     kotlin("jvm") version "1.3.70"
-    id("com.coditory.integration-test") version "1.1.6"
+    id("com.coditory.integration-test") version "1.1.7"
 }
 
 dependencies {
