@@ -43,7 +43,7 @@ class IdeaConfigurationSpec {
     @Test
     fun `should add integration tests from groovy and scala to idea module test dirs`() {
         val project = project()
-            .withPlugins(IdeaPlugin::class, GroovyPlugin::class, ScalaPlugin::class, IntegrationTestPlugin::class)
+            .withPlugins(IdeaPlugin::class, IntegrationTestPlugin::class, GroovyPlugin::class, ScalaPlugin::class)
             .build()
         val ideaPlugin = getIdeaPlugin(project)
         val module = ideaPlugin.model.module

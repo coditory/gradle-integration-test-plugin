@@ -3,6 +3,7 @@ package com.coditory.gradle.integration.base
 import com.coditory.gradle.integration.IntegrationTestPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
@@ -13,7 +14,7 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
     private val project = ProjectBuilder.builder()
         .withProjectDir(projectDir)
         .withName(name)
-        .build()
+        .build() as DefaultProject
 
     fun withGroup(group: String): SpecProjectBuilder {
         project.group = group
@@ -58,6 +59,7 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
     }
 
     fun build(): Project {
+        project.evaluate()
         return project
     }
 

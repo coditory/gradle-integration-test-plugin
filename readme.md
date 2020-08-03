@@ -13,7 +13,7 @@
 - Makes integration classpath extend test classpath and main classpath (it this order).
 - Adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks (only when `jacoco` plugin is enabled).
 - Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
-- Tested on java 11 and gradle versions: 4.9, 6.2, 6.5
+- Tested on java 11 and gradle versions: 5.0, 6.5
 
 ## Enabling the plugin
 

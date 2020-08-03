@@ -3,7 +3,7 @@ package com.coditory.gradle.integration
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.gradle.plugins.ide.idea.model.IdeaModel
+import org.gradle.plugins.ide.idea.model.IdeaModule
 
 object IdeaPluginConfiguration {
     fun apply(project: Project) {
@@ -11,12 +11,10 @@ object IdeaPluginConfiguration {
         if (!project.plugins.hasPlugin(IdeaPlugin::class.java)) {
             return
         }
-        val module = project.extensions.getByType(IdeaModel::class.java).module
-        val javaConvention = project.convention.getPlugin(JavaPluginConvention::class.java)
-        val integrationTest = javaConvention.sourceSets
-            .getByName(IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX)
-        module.testSourceDirs = module.testSourceDirs + integrationTest.allSource.srcDirs
-        module.testResourceDirs = module.testResourceDirs + integrationTest.resources.srcDirs
+        project.afterEvaluate {
+            project.plugins.findPlugin(IdeaPlugin::class.java)
+                ?.let { configureIdeaModule(project, it.model.module) }
+        }
     }
 
     private fun applyIdeaPluginIfNeeded(project: Project) {
@@ -27,5 +25,13 @@ object IdeaPluginConfiguration {
         if (project.rootProject.file(".idea").isDirectory) {
             project.plugins.apply(IdeaPlugin::class.java)
         }
+    }
+
+    private fun configureIdeaModule(project: Project, module: IdeaModule) {
+        val javaConvention = project.convention.getPlugin(JavaPluginConvention::class.java)
+        val integrationTest = javaConvention.sourceSets
+            .getByName(IntegrationTestPlugin.INTEGRATION_CONFIG_PREFIX)
+        module.testSourceDirs = module.testSourceDirs + integrationTest.allSource.srcDirs
+        module.testResourceDirs = module.testResourceDirs + integrationTest.resources.srcDirs
     }
 }

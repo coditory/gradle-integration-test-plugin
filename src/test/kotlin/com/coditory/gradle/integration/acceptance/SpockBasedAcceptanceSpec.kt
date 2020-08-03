@@ -82,7 +82,7 @@ class SpockBasedAcceptanceSpec {
         .build()
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "4.9"])
+    @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         val result = runGradle(project, listOf("check", "--debug"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(SUCCESS)
