@@ -1,16 +1,15 @@
 # Integration Test Gradle Plugin
-
-[![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.com/coditory/gradle-integration-test-plugin.svg?branch=master)](https://travis-ci.com/coditory/gradle-integration-test-plugin)
+[![Build Status](https://github.com/coditory/gradle-integration-test-plugin/workflows/Build/badge.svg)](https://github.com/coditory/gradle-integration-test-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-integration-test-plugin)
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.8-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+[![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
 - Handles runtime flags parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
-- Makes integration classpath extend test classpath and main classpath (it this order).
+- Makes integration classpath extend test classpath and main classpath (in this order).
 - Adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks (only when `jacoco` plugin is enabled).
 - Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
 - Tested on java 11 and gradle versions: 5.0, 6.5
@@ -21,7 +20,7 @@ Add to your `build.gradle`:
 
 ```gradle
 plugins {
-  id 'com.coditory.integration-test' version '1.1.8'
+  id "com.coditory.integration-test" version "1.1.8"
 }
 ```
 ### Sample usages with different test frameworks
@@ -47,8 +46,8 @@ dependencies {
 
 ```gradle
 plugins {
-    id 'java'
-    id 'com.coditory.integration-test' version '1.1.8'
+    id "java"
+    id "com.coditory.integration-test" version "1.1.8"
 }
 
 dependencies {
@@ -67,12 +66,12 @@ tasks.withType(Test) {
 
 ```gradle
 plugins {
-    id 'groovy'
-    id 'com.coditory.integration-test' version '1.1.8'
+    id "groovy"
+    id "com.coditory.integration-test" version "1.1.8"
 }
 
 dependencies {
-    testCompile 'org.spockframework:spock-core:2.0-M2-groovy-3.0'
+    testCompile "org.spockframework:spock-core:2.0-M2-groovy-3.0"
 }
 
 tasks.withType(Test) {

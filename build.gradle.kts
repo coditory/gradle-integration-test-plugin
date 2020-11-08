@@ -1,17 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
-import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
-import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 plugins {
     kotlin("jvm") version "1.3.72"
     id("jacoco")
-    id("pl.allegro.tech.build.axion-release") version "1.11.0"
-    id("com.github.kt3k.coveralls") version "2.10.1"
+    id("com.github.kt3k.coveralls") version "2.10.2"
     id("com.gradle.plugin-publish") version "0.12.0"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
 repositories {
@@ -19,7 +15,7 @@ repositories {
 }
 
 ktlint {
-    version.set("0.37.2")
+    version.set("0.39.0")
 }
 
 dependencies {
@@ -27,29 +23,13 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    testImplementation("org.assertj:assertj-core:3.16.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-}
-
-scmVersion {
-    versionCreator("versionWithBranch")
-    hooks = HooksConfig().also {
-        it.pre(
-            "fileUpdate",
-            mapOf(
-                "files" to listOf("readme.md") as Any,
-                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ -> v }),
-                "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
-            )
-        )
-        it.pre("commit", KotlinClosure2<String, ScmPosition, String>({ v, _ -> "Release: $v [ci skip]" }))
-    }
+    testImplementation("org.assertj:assertj-core:3.18.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
 group = "com.coditory.gradle"
-version = scmVersion.version
 
 tasks.withType<Test> {
     useJUnitPlatform()
@@ -60,7 +40,9 @@ tasks.withType<Test> {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.allWarningsAsErrors = true
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
 }
 
 tasks.jacocoTestReport {

@@ -10,5 +10,6 @@ indent_style = space
 [*.{kt, kts}]
 max_line_length = 140
 indent_size = 4
-# Import ordering bug: https://github.com/pinterest/ktlint/issues/527
-disabled_rules=import-ordering
+
+[*.{yml, json}]
+indent_size = 2

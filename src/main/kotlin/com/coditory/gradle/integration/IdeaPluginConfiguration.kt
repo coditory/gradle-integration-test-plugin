@@ -5,7 +5,7 @@ import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.plugins.ide.idea.model.IdeaModule
 
-object IdeaPluginConfiguration {
+internal object IdeaPluginConfiguration {
     fun apply(project: Project) {
         applyIdeaPluginIfNeeded(project)
         if (!project.plugins.hasPlugin(IdeaPlugin::class.java)) {
