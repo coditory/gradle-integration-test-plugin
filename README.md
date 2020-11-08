@@ -1,6 +1,6 @@
 # Integration Test Gradle Plugin
-[![Build Status](https://github.com/coditory/gradle-integration-test-plugin/workflows/Build/badge.svg)](https://github.com/coditory/gradle-integration-test-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
-[![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-integration-test-plugin)
+[![Build Status](https://github.com/coditory/gradle-integration-test-plugin/workflows/Build/badge.svg?branch=master)](https://github.com/coditory/gradle-integration-test-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-integration-test-plugin?branch=master)
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.9-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
