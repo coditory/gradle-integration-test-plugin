@@ -73,7 +73,7 @@ pluginBundle {
     website = "https://github.com/coditory/gradle-integration-test-plugin"
     vcsUrl = "https://github.com/coditory/gradle-integration-test-plugin"
     description = "Gradle Plugin for integration tests"
-    tags = listOf("test", "integration-test", "java-integration-test")
+    tags = listOf("test", "integration", "integration-test", "java-integration-test")
 
     (plugins) {
         "integrationTestPlugin" {
