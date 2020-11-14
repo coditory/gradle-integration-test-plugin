@@ -14,18 +14,10 @@ class Junit5BasedAcceptanceSpec {
     private fun createProject(): Project {
         val commonImports =
             """
-            import static org.junit.jupiter.api.Assertions.assertEquals;
             import org.junit.jupiter.api.Test;
-            import java.nio.file.Files;
-            import java.nio.file.Paths;
-            import java.nio.file.Path;
-            """.trimIndent()
-        val readFileMethod =
-            """
-            private String readFile(String name) throws Exception {
-                Path path = Paths.get(getClass().getClassLoader().getResource(name).toURI());
-                return Files.readString(path);
-            }
+            
+            import static org.junit.jupiter.api.Assertions.assertEquals;
+            import static base.ClasspathFileReader.readFile;
             """.trimIndent()
         return project("sample-project")
             .withBuildGradle(
@@ -45,51 +37,123 @@ class Junit5BasedAcceptanceSpec {
     
                 test {
                     useJUnitPlatform()
+                    testLogging {
+                        events("passed", "failed", "skipped")
+                        setExceptionFormat("full")
+                    }
+                }
+                """
+            ).withFile(
+                "src/test/java/base/ClasspathFileReader.java",
+                """
+                package base;
+                
+                import java.net.URI;
+                import java.nio.file.Files;
+                import java.nio.file.Path;
+                import java.nio.file.Paths;
+                    
+                public class ClasspathFileReader {
+                    public static String readFile(String name) {
+                        try {
+                            URI uri = ClasspathFileReader.class.getClassLoader()
+                                .getResource(name)
+                                .toURI();
+                            Path path = Paths.get(uri);
+                            return Files.readString(path);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Could not read file from classpath: " + name, e);
+                        }
+                    }
+                }
+                """
+            ).withFile(
+                "src/test/java/ConstantValues.java",
+                """
+                public class ConstantValues {
+                    public static final String MODULE = "test";
+                }
+                """
+            ).withFile(
+                "src/integration/java/ConstantValues.java",
+                """
+                public class ConstantValues {
+                    public static final String MODULE = "integration";
+                }
+                """
+            ).withFile(
+                "src/main/java/ConstantValues.java",
+                """
+                public class ConstantValues {
+                    public static final String MODULE = "main";
+                }
+                """
+            ).withFile(
+                "src/main/java/MainConstantValues.java",
+                """
+                public class MainConstantValues {
+                    public static final String MODULE = "main";
                 }
                 """
             ).withFile(
                 "src/integration/java/TestIntgSpec.java",
                 """
-            $commonImports
+                $commonImports
+    
+                public class TestIntgSpec {
+                    @Test
+                    public void shouldReadATxtFileFromMain() {
+                        assertEquals("main-a", readFile("a.txt"));
+                    }
 
-            public class TestIntgSpec {
-                @Test
-                public void shouldReadATxtFileFromMain() throws Exception {
-                    assertEquals("main-a", readFile("a.txt"));
+                    @Test
+                    public void shouldReadBTxtFileFromTest() {
+                        assertEquals("test-b", readFile("b.txt"));
+                    }
+
+                    @Test
+                    public void shouldReadCTxtFileFromTest() {
+                        assertEquals("integration-c", readFile("c.txt"));
+                    }
+    
+                    @Test
+                    public void shouldReadConstantValueFromIntModule() {
+                        assertEquals("integration", ConstantValues.MODULE);
+                    }
+                    
+                    @Test
+                    public void shouldReadConstantValueFromMainModule() {
+                        assertEquals("main", MainConstantValues.MODULE);
+                    }
                 }
-
-                @Test
-                public void shouldReadBTxtFileFromTest() throws Exception {
-                    assertEquals("test-b", readFile("b.txt"));
-                }
-
-                @Test
-                public void shouldReadCTxtFileFromTest() throws Exception {
-                    assertEquals("integration-c", readFile("c.txt"));
-                }
-
-                $readFileMethod
-            }
-            """
+                """
             ).withFile(
                 "src/test/java/TestUnitSpec.java",
                 """
-            $commonImports
+                $commonImports
+    
+                public class TestUnitSpec {
+                    @Test
+                    public void shouldReadATxtFromMain() {
+                        assertEquals("main-a", readFile("a.txt"));
+                    }
 
-            public class TestUnitSpec {
-                @Test
-                public void shouldReadATxtFromMain() throws Exception {
-                    assertEquals("main-a", readFile("a.txt"));
+                    @Test
+                    public void shouldReadBTxtFromTest() {
+                        assertEquals("test-b", readFile("b.txt"));
+                    }
+    
+                    @Test
+                    public void shouldReadConstantValueFromTestModule() {
+                        assertEquals("test", ConstantValues.MODULE);
+                    }
+                    
+                    @Test
+                    public void shouldReadConstantValueFromMainModule() {
+                        assertEquals("main", MainConstantValues.MODULE);
+                    }
                 }
-
-                @Test
-                public void shouldReadBTxtFromTest() throws Exception {
-                    assertEquals("test-b", readFile("b.txt"));
-                }
-
-                $readFileMethod
-            }
-            """
+                """
             ).withFile("src/main/resources/a.txt", "main-a")
             .withFile("src/main/resources/b.txt", "main-b")
             .withFile("src/main/resources/c.txt", "main-c")
@@ -102,7 +166,7 @@ class Junit5BasedAcceptanceSpec {
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
-        val result = runGradle(project, listOf("check", "--debug"), gradleVersion)
+        val result = runGradle(project, listOf("check"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }

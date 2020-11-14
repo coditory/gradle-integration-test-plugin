@@ -1,5 +1,9 @@
 rootProject.name = "integration-test-plugin"
 
+plugins {
+    id("com.gradle.enterprise").version("3.4.1")
+}
+
 gradleEnterprise {
     buildScan {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
@@ -9,8 +13,4 @@ gradleEnterprise {
             tag("CI")
         }
     }
-}
-
-plugins {
-    id("com.gradle.enterprise").version("3.3.1")
 }

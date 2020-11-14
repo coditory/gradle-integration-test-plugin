@@ -35,7 +35,7 @@ jobs:
       - name: Build with Gradle
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: ./gradlew build jacocoTestReport coveralls --scan --stacktrace
+        run: ./gradlew build jacocoTestReport coveralls --scan
       - name: Publish Reports Artifact
         uses: actions/upload-artifact@v2
         if: always()

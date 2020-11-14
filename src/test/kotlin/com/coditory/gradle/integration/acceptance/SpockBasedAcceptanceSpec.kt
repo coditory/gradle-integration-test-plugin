@@ -25,11 +25,56 @@ class SpockBasedAcceptanceSpec {
                 testCompile "org.codehaus.groovy:groovy-all:2.4.13"
                 testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
             }
+
+            test {
+                testLogging {
+                    events("passed", "failed", "skipped")
+                    setExceptionFormat("full")
+                }
+            }
+            """
+        ).withFile(
+            "src/test/groovy/ClasspathFileReader.groovy",
+            """
+            class ClasspathFileReader {
+                static String readFile(String name) throws Exception {
+                    return ClasspathFileReader.class.getResource("/" + name).getText()
+                }
+            }
+            """
+        ).withFile(
+            "src/test/groovy/ConstantValues.groovy",
+            """
+            class ConstantValues {
+                static final String MODULE = "test"
+            }
+            """
+        ).withFile(
+            "src/integration/groovy/ConstantValues.groovy",
+            """
+            class ConstantValues {
+                static final String MODULE = "integration"
+            }
+            """
+        ).withFile(
+            "src/main/java/ConstantValues.java",
+            """
+            public class ConstantValues {
+                public static final String MODULE = "main";
+            }
+            """
+        ).withFile(
+            "src/main/java/MainConstantValues.java",
+            """
+            public class MainConstantValues {
+                public static final String MODULE = "main";
+            }
             """
         ).withFile(
             "src/integration/groovy/TestIntgSpec.groovy",
             """
             import spock.lang.Specification
+            import static ClasspathFileReader.readFile
 
             class TestIntgSpec extends Specification {
                 def "should read a.txt from main"() {
@@ -46,9 +91,15 @@ class SpockBasedAcceptanceSpec {
                     expect:
                         readFile('c.txt') == 'integration-c'
                 }
-
-                private String readFile(String name) {
-                    return getClass().getResource("/" + name).getText()
+                
+                def "should read constant value from integration module"() {
+                    expect:
+                        ConstantValues.MODULE == 'integration'
+                }
+                
+                def "should read main constant value from main module"() {
+                    expect:
+                        MainConstantValues.MODULE == 'main'
                 }
             }
             """
@@ -56,6 +107,7 @@ class SpockBasedAcceptanceSpec {
             "src/test/groovy/TestUnitSpec.groovy",
             """
             import spock.lang.Specification
+            import static ClasspathFileReader.readFile
 
             class TestUnitSpec extends Specification {
                 def "should read a.txt from main"() {
@@ -67,9 +119,10 @@ class SpockBasedAcceptanceSpec {
                     expect:
                         readFile('b.txt') == 'test-b'
                 }
-
-                private String readFile(String name) {
-                    return getClass().getResource("/" + name).getText()
+                
+                def "should read constant value from test module"() {
+                    expect:
+                        ConstantValues.MODULE == 'test'
                 }
             }
             """
@@ -84,7 +137,7 @@ class SpockBasedAcceptanceSpec {
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
-        val result = runGradle(project, listOf("check", "--debug"), gradleVersion)
+        val result = runGradle(project, listOf("check"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(SUCCESS)
     }

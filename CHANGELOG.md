@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Make it possible to use in integration module classes from test module.
 
 ## [1.1.9] - 2020-10-08
 ### Changed

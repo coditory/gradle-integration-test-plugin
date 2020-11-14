@@ -33,9 +33,13 @@ class CommandLineAcceptanceSpec {
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
                     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.1"
                 }
-    
+                
                 test {
                     useJUnitPlatform()
+                    testLogging {
+                        events("passed", "failed", "skipped")
+                        setExceptionFormat("full")
+                    }
                 }
                 """
             ).withFile(
@@ -73,7 +77,7 @@ class CommandLineAcceptanceSpec {
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
-        val result = runGradle(project, listOf("check", "--debug"), gradleVersion)
+        val result = runGradle(project, listOf("check"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
@@ -93,7 +97,7 @@ class CommandLineAcceptanceSpec {
     }
 
     @Test
-    fun `should skip exclude integration tests`() {
+    fun `should exclude integration tests`() {
         val result = runGradle(project, listOf("check", "-x", "integrationTest"))
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isNull()
