@@ -10,7 +10,6 @@
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
 - Handles runtime flags parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
 - Makes integration classpath extend test classpath and main classpath (in this order).
-- Adds `jacocoIntegrationTestReport` and `jacocoIntegrationTestCoverageVerification` tasks (only when `jacoco` plugin is enabled).
 - Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
 
 ## Enabling the plugin
@@ -139,4 +138,16 @@ Skipping tests:
 [Test filtering](https://docs.gradle.org/current/userguide/java_testing.html#test_filtering) is supported as well:
 ```sh
 ./gradlew iT --tests com.coditory.SampleTest.shouldWork
+```
+
+Creating a single [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html) report for unit and integration tests:
+
+```gradle
+jacocoTestReport {
+    executionData(fileTree(project.buildDir).include("jacoco/*.exec"))
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
 ```

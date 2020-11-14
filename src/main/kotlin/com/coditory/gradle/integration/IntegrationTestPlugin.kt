@@ -3,7 +3,6 @@ package com.coditory.gradle.integration
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 open class IntegrationTestPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -18,9 +17,6 @@ open class IntegrationTestPlugin : Plugin<Project> {
         TestTaskConfiguration.apply(project)
         TestAllTaskConfiguration.apply(project)
         IdeaPluginConfiguration.apply(project)
-        if (project.plugins.hasPlugin(JacocoPlugin::class.java)) {
-            JacocoReportTaskConfiguration.apply(project)
-        }
     }
 
     companion object {
