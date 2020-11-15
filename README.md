@@ -1,7 +1,7 @@
 # Integration Test Gradle Plugin
 [![Build Status](https://github.com/coditory/gradle-integration-test-plugin/workflows/Build/badge.svg?branch=master)](https://github.com/coditory/gradle-integration-test-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-integration-test-plugin?branch=master)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.10-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.1.11-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
@@ -18,7 +18,7 @@ Add to your `build.gradle`:
 
 ```gradle
 plugins {
-  id "com.coditory.integration-test" version "1.1.10"
+  id "com.coditory.integration-test" version "1.1.11"
 }
 ```
 ### Sample usages with different test frameworks
@@ -30,7 +30,7 @@ See a [project](https://github.com/coditory/gradle-integration-test-plugin-sampl
 ```gradle
 plugins {
     id "java"
-    id "com.coditory.integration-test" version "1.1.10"
+    id "com.coditory.integration-test" version "1.1.11"
 }
 
 dependencies {
@@ -45,7 +45,7 @@ dependencies {
 ```gradle
 plugins {
     id "java"
-    id "com.coditory.integration-test" version "1.1.10"
+    id "com.coditory.integration-test" version "1.1.11"
 }
 
 dependencies {
@@ -65,7 +65,7 @@ tasks.withType(Test) {
 ```gradle
 plugins {
     id "groovy"
-    id "com.coditory.integration-test" version "1.1.10"
+    id "com.coditory.integration-test" version "1.1.11"
 }
 
 dependencies {
@@ -84,7 +84,7 @@ tasks.withType(Test) {
 ```gradle
 plugins {
     kotlin("jvm") version "1.3.70"
-    id("com.coditory.integration-test") version "1.1.10"
+    id("com.coditory.integration-test") version "1.1.11"
 }
 
 dependencies {
