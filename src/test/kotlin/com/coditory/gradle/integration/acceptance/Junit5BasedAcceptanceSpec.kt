@@ -32,7 +32,7 @@ class Junit5BasedAcceptanceSpec {
     
                 dependencies {
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
-                    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.1"
                 }
     
                 test {
@@ -164,7 +164,7 @@ class Junit5BasedAcceptanceSpec {
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "5.0", "7.0-rc-1"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         val result = runGradle(project, listOf("check"), gradleVersion)
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
