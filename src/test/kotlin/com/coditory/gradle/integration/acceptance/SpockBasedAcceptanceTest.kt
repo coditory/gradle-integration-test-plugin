@@ -1,13 +1,13 @@
 package com.coditory.gradle.integration.acceptance
 
-import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.project
-import com.coditory.gradle.integration.base.SpecProjectRunner.runGradle
+import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
+import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class SpockBasedAcceptanceSpec {
+class SpockBasedAcceptanceTest {
     private val project = project("sample-project")
         .withBuildGradle(
             """
@@ -21,9 +21,9 @@ class SpockBasedAcceptanceSpec {
             }
 
             dependencies {
-                testCompile "junit:junit:4.12"
-                testCompile "org.codehaus.groovy:groovy-all:2.4.13"
-                testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+                testImplementation "junit:junit:4.12"
+                testImplementation "org.codehaus.groovy:groovy-all:2.4.13"
+                testImplementation "org.spockframework:spock-core:1.1-groovy-2.4"
             }
 
             test {
@@ -137,7 +137,9 @@ class SpockBasedAcceptanceSpec {
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
+        // when
         val result = runGradle(project, listOf("check"), gradleVersion)
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(SUCCESS)
     }

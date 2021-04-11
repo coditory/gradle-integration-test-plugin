@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 
-object SpecProjectRunner {
+object TestProjectRunner {
     fun runGradle(project: Project, arguments: List<String>, gradleVersion: String? = null): BuildResult {
         val builder = GradleRunner.create()
             .withProjectDir(project.projectDir)

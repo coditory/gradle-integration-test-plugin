@@ -2,7 +2,7 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.TEST_ALL_TASK_NAME
-import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.createProject
+import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.createProject
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -10,7 +10,7 @@ import org.gradle.api.plugins.JavaPlugin.TEST_TASK_NAME
 import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import org.junit.jupiter.api.Test
 
-class TestAllTaskConfigurationSpec {
+class TestAllTaskConfigurationTest {
     private val project: Project = createProject()
 
     @Test

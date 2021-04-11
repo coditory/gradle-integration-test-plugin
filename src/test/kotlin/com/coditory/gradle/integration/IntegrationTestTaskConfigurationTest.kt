@@ -2,8 +2,8 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_CONFIG_PREFIX
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
-import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.createProject
-import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.project
+import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.createProject
+import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
@@ -15,7 +15,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import org.junit.jupiter.api.Test
 import org.gradle.api.tasks.testing.Test as TestTask
 
-class IntegrationTestTaskConfigurationSpec {
+class IntegrationTestTaskConfigurationTest {
     private val project: Project = createProject()
 
     @Test
@@ -24,18 +24,19 @@ class IntegrationTestTaskConfigurationSpec {
         assertThat(sourceSet).isNotNull
         assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(toBuildPath("classes/java/integration"))
         assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(toBuildPath("resources/integration"))
-        val expectedBuildPath = toBuildPath(
-            listOf(
-                "classes/java/integration",
-                "resources/integration",
-                "classes/java/test",
-                "resources/test",
-                "classes/java/main",
-                "resources/main"
-            )
-        )
         assertThat(sourceSet.runtimeClasspath.asPath)
-            .isEqualTo(expectedBuildPath)
+            .isEqualTo(
+                toBuildPath(
+                    listOf(
+                        "classes/java/integration",
+                        "resources/integration",
+                        "classes/java/test",
+                        "resources/test",
+                        "classes/java/main",
+                        "resources/main"
+                    )
+                )
+            )
     }
 
     @Test

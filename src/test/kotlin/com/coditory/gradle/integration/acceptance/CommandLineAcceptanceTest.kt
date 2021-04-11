@@ -1,7 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
-import com.coditory.gradle.integration.base.SpecProjectBuilder
-import com.coditory.gradle.integration.base.SpecProjectRunner.runGradle
+import com.coditory.gradle.integration.base.TestProjectBuilder
+import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.testkit.runner.TaskOutcome
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class CommandLineAcceptanceSpec {
+class CommandLineAcceptanceTest {
     private val project = createProject()
 
     private fun createProject(): Project {
@@ -18,7 +18,7 @@ class CommandLineAcceptanceSpec {
             import static org.junit.jupiter.api.Assertions.assertEquals;
             import org.junit.jupiter.api.Test;
             """.trimIndent()
-        return SpecProjectBuilder.project()
+        return TestProjectBuilder.project()
             .withBuildGradle(
                 """
                 plugins {
@@ -31,7 +31,7 @@ class CommandLineAcceptanceSpec {
     
                 dependencies {
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
-                    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.1"
                 }
                 
                 test {
@@ -77,49 +77,63 @@ class CommandLineAcceptanceSpec {
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
+        // when
         val result = runGradle(project, listOf("check"), gradleVersion)
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 
     @Test
     fun `should not run integration tests during test task`() {
+        // when
         val result = runGradle(project, listOf("test"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isNull()
     }
 
     @Test
     fun `should run integration tests and unit tests during testAll task`() {
+        // when
         val result = runGradle(project, listOf("testAll"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 
     @Test
     fun `should exclude integration tests`() {
+        // when
         val result = runGradle(project, listOf("check", "-x", "integrationTest"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isNull()
     }
 
     @Test
     fun `should skip integration tests`() {
+        // when
         val result = runGradle(project, listOf("check", "-PskipIntegrationTests"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
 
     @Test
     fun `should skip all tests`() {
+        // when
         val result = runGradle(project, listOf("check", "-PskipTests"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
 
     @Test
     fun `should skip unit tests`() {
+        // when
         val result = runGradle(project, listOf("check", "-PskipUnitTests"))
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }

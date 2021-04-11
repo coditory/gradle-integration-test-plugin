@@ -1,5 +1,5 @@
 plugins {
-    id("com.gradle.enterprise").version("3.5")
+    id("com.gradle.enterprise").version("3.6.1")
 }
 
 rootProject.name = "integration-test-plugin"

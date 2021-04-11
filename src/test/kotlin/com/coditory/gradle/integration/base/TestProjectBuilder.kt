@@ -8,43 +8,44 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
 import java.nio.file.Files
+import kotlin.io.path.createTempDirectory
 import kotlin.reflect.KClass
 
-class SpecProjectBuilder private constructor(projectDir: File, name: String) {
+class TestProjectBuilder private constructor(projectDir: File, name: String) {
     private val project = ProjectBuilder.builder()
         .withProjectDir(projectDir)
         .withName(name)
         .build() as DefaultProject
 
-    fun withGroup(group: String): SpecProjectBuilder {
+    fun withGroup(group: String): TestProjectBuilder {
         project.group = group
         return this
     }
 
-    fun withVersion(version: String): SpecProjectBuilder {
+    fun withVersion(version: String): TestProjectBuilder {
         project.version = version
         return this
     }
 
-    fun withExtProperty(name: String, value: String): SpecProjectBuilder {
+    fun withExtProperty(name: String, value: String): TestProjectBuilder {
         project.extensions.extraProperties[name] = value
         return this
     }
 
-    fun withPlugins(vararg plugins: KClass<out Plugin<*>>): SpecProjectBuilder {
+    fun withPlugins(vararg plugins: KClass<out Plugin<*>>): TestProjectBuilder {
         plugins
             .toList()
             .forEach { project.plugins.apply(it.java) }
         return this
     }
 
-    fun withBuildGradle(content: String): SpecProjectBuilder {
+    fun withBuildGradle(content: String): TestProjectBuilder {
         val buildFile = project.rootDir.resolve("build.gradle")
         buildFile.writeText(content.trimIndent().trim())
         return this
     }
 
-    fun withFile(path: String, content: String): SpecProjectBuilder {
+    fun withFile(path: String, content: String): TestProjectBuilder {
         val filePath = project.rootDir.resolve(path).toPath()
         Files.createDirectories(filePath.parent)
         val testFile = Files.createFile(filePath).toFile()
@@ -52,7 +53,7 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
-    fun withDirectory(path: String): SpecProjectBuilder {
+    fun withDirectory(path: String): TestProjectBuilder {
         val filePath = project.rootDir.resolve(path).toPath()
         Files.createDirectories(filePath)
         return this
@@ -70,25 +71,26 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
             return projectWithPlugins().build()
         }
 
-        fun project(name: String = "sample-project"): SpecProjectBuilder {
-            return SpecProjectBuilder(createProjectDir(name), name)
+        fun project(name: String = "sample-project"): TestProjectBuilder {
+            return TestProjectBuilder(createProjectDir(name), name)
         }
 
-        fun projectWithPlugins(name: String = "sample-project"): SpecProjectBuilder {
+        fun projectWithPlugins(name: String = "sample-project"): TestProjectBuilder {
             return project(name)
                 .withPlugins(JavaPlugin::class, IntegrationTestPlugin::class)
         }
 
-        private fun createProjectDir(projectName: String): File {
+        @Suppress("EXPERIMENTAL_API_USAGE_ERROR")
+        private fun createProjectDir(directory: String): File {
             removeProjectDirs()
-            val projectParentDir = createTempDir()
-            val projectDir = projectParentDir.resolve(projectName)
+            val projectParentDir = createTempDirectory().toFile()
+            val projectDir = projectParentDir.resolve(directory)
             projectDir.mkdir()
-            projectDirs.add(projectDir)
+            projectDirs.add(projectParentDir)
             return projectDir
         }
 
-        fun removeProjectDirs() {
+        private fun removeProjectDirs() {
             projectDirs.forEach {
                 it.deleteRecursively()
             }

@@ -1,32 +1,30 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.31"
     id("jacoco")
-    id("com.github.kt3k.coveralls") version "2.10.2"
-    id("com.gradle.plugin-publish") version "0.12.0"
+    id("com.github.kt3k.coveralls") version "2.12.0"
+    id("com.gradle.plugin-publish") version "0.14.0"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 ktlint {
-    version.set("0.39.0")
+    version.set("0.41.0")
 }
 
 dependencies {
     implementation(gradleApi())
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
 
-    testImplementation("org.assertj:assertj-core:3.18.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 group = "com.coditory.gradle"

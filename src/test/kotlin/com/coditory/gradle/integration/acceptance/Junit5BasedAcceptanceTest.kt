@@ -1,14 +1,14 @@
 package com.coditory.gradle.integration.acceptance
 
-import com.coditory.gradle.integration.base.SpecProjectBuilder.Companion.project
-import com.coditory.gradle.integration.base.SpecProjectRunner.runGradle
+import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
+import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class Junit5BasedAcceptanceSpec {
+class Junit5BasedAcceptanceTest {
     private val project = createProject()
 
     private fun createProject(): Project {
@@ -164,9 +164,11 @@ class Junit5BasedAcceptanceSpec {
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "5.0", "7.0-rc-1"])
+    @ValueSource(strings = ["current", "5.0", "6.0"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
+        // when
         val result = runGradle(project, listOf("check"), gradleVersion)
+        // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
