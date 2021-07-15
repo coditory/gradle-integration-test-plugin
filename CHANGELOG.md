@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.2.2] - 2021-07-15
+### Changed
+- Fix gradleApi() dependency in order to work with jdk8 gradle projects ([issue #6](https://github.com/coditory/gradle-integration-test-plugin/issues/6))
+
 ## [1.2.1] - 2021-04-11
 ### Changed
 - Updated dependencies for Gradle v7
@@ -26,7 +30,8 @@
 ### Added
 - Support for intellij idea. Mark integration test directory as a test folder #3.
 
-[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.1.11...v1.2.0
 [1.1.11]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.1.10...v1.1.11
