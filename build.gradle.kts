@@ -19,8 +19,6 @@ ktlint {
 }
 
 dependencies {
-    implementation(gradleApi())
-
     testImplementation("org.assertj:assertj-core:3.19.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
