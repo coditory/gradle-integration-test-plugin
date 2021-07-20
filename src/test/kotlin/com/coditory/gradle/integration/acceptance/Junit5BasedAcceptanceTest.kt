@@ -60,7 +60,7 @@ class Junit5BasedAcceptanceTest {
                                 .getResource(name)
                                 .toURI();
                             Path path = Paths.get(uri);
-                            return Files.readString(path);
+                            return new String(Files.readAllBytes(path));
                         } catch (Exception e) {
                             throw new RuntimeException("Could not read file from classpath: " + name, e);
                         }
