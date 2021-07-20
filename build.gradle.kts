@@ -41,6 +41,12 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
 tasks.jacocoTestReport {
     reports {
         xml.isEnabled = true
