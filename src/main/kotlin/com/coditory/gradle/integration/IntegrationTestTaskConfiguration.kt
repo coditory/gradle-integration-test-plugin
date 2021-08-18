@@ -29,29 +29,26 @@ internal object IntegrationTestTaskConfiguration {
     }
 
     private fun setupConfiguration(project: Project) {
-        val capitalizedName = INTEGRATION_CONFIG_PREFIX.capitalize()
-        project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}Implementation") {
-            it.extendsFrom(project.configurations.getByName("testImplementation"))
+        listOf(
+            "testAnnotationProcessor",
+            "testCompile",
+            "testCompileClasspath",
+            "testCompileOnly",
+            "testImplementation",
+            "testRuntime",
+            "testRuntimeClasspath",
+            "testRuntimeOnly"
+        )
+            .filter { project.configurations.names.contains(it) }
+            .forEach { setupConfiguration(project, it) }
+    }
+
+    private fun setupConfiguration(project: Project, testConfigName: String) {
+        val integrationConfigName = testConfigName.replaceFirst("test", INTEGRATION_CONFIG_PREFIX)
+        project.configurations.getByName(integrationConfigName) {
+            it.extendsFrom(project.configurations.getByName(testConfigName))
             it.isVisible = true
             it.isTransitive = true
-            it.description = "$capitalizedName Implementation"
-        }
-        if (project.configurations.names.contains("testRuntimeOnly")) {
-            // gradle 7
-            project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}RuntimeOnly") {
-                it.extendsFrom(project.configurations.getByName("testRuntimeOnly"))
-                it.isVisible = true
-                it.isTransitive = true
-                it.description = "$capitalizedName Runtime Only"
-            }
-        } else {
-            // gradle <7
-            project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}Runtime") {
-                it.extendsFrom(project.configurations.getByName("testRuntime"))
-                it.isVisible = true
-                it.isTransitive = true
-                it.description = "$capitalizedName Runtime"
-            }
         }
     }
 

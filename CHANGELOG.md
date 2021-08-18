@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Support more configurations. Required by Lombok. ([issue #10](https://github.com/coditory/gradle-integration-test-plugin/issues/10))
 
 ## [1.2.3] - 2021-07-20
 ### Changed
