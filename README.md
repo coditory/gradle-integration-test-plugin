@@ -49,8 +49,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.6.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.7.2"
 }
 
 tasks.withType(Test) {
@@ -69,7 +69,7 @@ plugins {
 }
 
 dependencies {
-    testCompile "org.spockframework:spock-core:2.0-M2-groovy-3.0"
+    testCompile "org.spockframework:spock-core:2.0-groovy-3.0"
 }
 
 tasks.withType(Test) {
@@ -83,15 +83,13 @@ tasks.withType(Test) {
 
 ```gradle
 plugins {
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.5.21"
     id("com.coditory.integration-test") version "1.2.3"
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
 }
 
 tasks.withType<Test> {
