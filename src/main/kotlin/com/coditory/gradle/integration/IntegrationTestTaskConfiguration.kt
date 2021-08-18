@@ -36,6 +36,18 @@ internal object IntegrationTestTaskConfiguration {
             it.isTransitive = true
             it.description = "$capitalizedName Implementation"
         }
+        project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}CompileOnly") {
+            it.extendsFrom(project.configurations.getByName("testCompileOnly"))
+            it.isVisible = true
+            it.isTransitive = true
+            it.description = "$capitalizedName Compile Only"
+        }
+        project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}AnnotationProcessor") {
+            it.extendsFrom(project.configurations.getByName("testAnnotationProcessor"))
+            it.isVisible = true
+            it.isTransitive = true
+            it.description = "$capitalizedName Annotation Processor"
+        }
         if (project.configurations.names.contains("testRuntimeOnly")) {
             // gradle 7
             project.configurations.getByName("${INTEGRATION_CONFIG_PREFIX}RuntimeOnly") {

@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added support for Lombok library
 
 ## [1.2.3] - 2021-07-20
 ### Changed
