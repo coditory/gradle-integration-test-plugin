@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.31"
+    kotlin("jvm") version "1.6.20"
     id("jacoco")
     id("com.github.kt3k.coveralls") version "2.12.0"
-    id("com.gradle.plugin-publish") version "0.15.0"
+    id("com.gradle.plugin-publish") version "1.0.0-rc-2"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 repositories {
@@ -15,14 +15,14 @@ repositories {
 }
 
 ktlint {
-    version.set("0.42.1")
+    version.set("0.45.2")
 }
 
 dependencies {
-    testImplementation("org.assertj:assertj-core:3.20.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 group = "com.coditory.gradle"
@@ -49,8 +49,8 @@ java {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        html.isEnabled = true
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
 
@@ -58,28 +58,23 @@ coveralls {
     sourceDirs = listOf("src/main/kotlin")
 }
 
+// Marking new version (incrementPatch [default], incrementMinor, incrementMajor)
+// ./gradlew markNextVersion -Prelease.incrementer=incrementMinor
+// Releasing the plugin:
+// ./gradlew release && ./gradlew publishPlugins
 gradlePlugin {
     plugins {
         create("integrationTestPlugin") {
             id = "com.coditory.integration-test"
             implementationClass = "com.coditory.gradle.integration.IntegrationTestPlugin"
+            displayName = "Integration test plugin"
+            description = "Gradle Plugin for integration tests"
         }
     }
 }
 
-// Marking new version (incrementPatch [default], incrementMinor, incrementMajor)
-// ./gradlew markNextVersion -Prelease.incrementer=incrementMinor
-// Releasing the plugin:
-// ./gradlew release && ./gradlew publishPlugins
 pluginBundle {
     website = "https://github.com/coditory/gradle-integration-test-plugin"
     vcsUrl = "https://github.com/coditory/gradle-integration-test-plugin"
-    description = "Gradle Plugin for integration tests"
     tags = listOf("test", "integration", "integration-test", "java-integration-test")
-
-    (plugins) {
-        "integrationTestPlugin" {
-            displayName = "Integration test plugin"
-        }
-    }
 }

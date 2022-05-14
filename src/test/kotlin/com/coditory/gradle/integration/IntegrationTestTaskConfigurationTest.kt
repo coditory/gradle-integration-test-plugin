@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.plugins.JavaBasePlugin
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
@@ -96,7 +95,7 @@ class IntegrationTestTaskConfigurationTest {
     }
 
     private fun getSourceSet(project: Project = this.project): SourceSet {
-        return project.convention.getPlugin(JavaPluginConvention::class.java)
-            .sourceSets.getByName(INTEGRATION_CONFIG_PREFIX)
+        return SourceSetExtractor.sourceSets(project)
+            .getByName(INTEGRATION_CONFIG_PREFIX)
     }
 }

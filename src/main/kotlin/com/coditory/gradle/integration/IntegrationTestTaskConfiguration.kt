@@ -6,7 +6,6 @@ import com.coditory.gradle.integration.TestSkippingConditions.skipIntegrationTes
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.testing.Test
 import org.gradle.language.base.plugins.LifecycleBasePlugin
@@ -19,10 +18,10 @@ internal object IntegrationTestTaskConfiguration {
     }
 
     private fun setupSourceSet(project: Project): SourceSet {
-        val javaConvention = project.convention.getPlugin(JavaPluginConvention::class.java)
-        val main = javaConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-        val test = javaConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-        return javaConvention.sourceSets.create(INTEGRATION_CONFIG_PREFIX) {
+        val sourceSets = SourceSetExtractor.sourceSets(project)
+        val main = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        val test = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+        return sourceSets.create(INTEGRATION_CONFIG_PREFIX) {
             it.compileClasspath += test.output + main.output + test.compileClasspath
             it.runtimeClasspath += test.output + main.output + test.runtimeClasspath
         }
