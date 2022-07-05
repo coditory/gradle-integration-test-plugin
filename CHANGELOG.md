@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.4.1] - 2022-07-05
+### Changed
+- Fix [issue #14](https://github.com/coditory/gradle-integration-test-plugin/issues/14) - build failed for gradle version `7.5-rc-1`
+- Updated dependencies
+
 ## [1.4.0] - 2022-05-14
 ### Changed
 - Updated gradle to 7.4.2 with all dependencies
@@ -42,7 +47,8 @@
 ### Added
 - Support for intellij idea. Mark integration test directory as a test folder #3.
 
-[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.3...v1.3.0
 [1.2.3]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.2...v1.2.3
