@@ -1,6 +1,6 @@
 package com.coditory.gradle.integration.shared
 
-data class SemVersion(val major: Int, val minor: Int, val patch: Int) : Comparable<SemVersion> {
+internal data class SemVersion(val major: Int, val minor: Int, val patch: Int) : Comparable<SemVersion> {
     override operator fun compareTo(other: SemVersion): Int {
         return comparator.compare(this, other)
     }

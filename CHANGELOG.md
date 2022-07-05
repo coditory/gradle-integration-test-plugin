@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.4.2] - 2022-07-05
+### Changed
+- Fix [issue #13](https://github.com/coditory/gradle-integration-test-plugin/issues/13) - make it possible to access Kotlin internal scope from integration tests
+
 ## [1.4.1] - 2022-07-05
 ### Changed
 - Fix [issue #14](https://github.com/coditory/gradle-integration-test-plugin/issues/14) - build failed for gradle version `7.5-rc-1`
@@ -47,7 +51,8 @@
 ### Added
 - Support for intellij idea. Mark integration test directory as a test folder #3.
 
-[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.2...HEAD
+[1.4.2]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/coditory/gradle-integration-test-plugin/compare/v1.2.3...v1.3.0

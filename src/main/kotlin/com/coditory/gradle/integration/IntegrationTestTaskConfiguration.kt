@@ -3,18 +3,23 @@ package com.coditory.gradle.integration
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_CONFIG_PREFIX
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST_TASK_NAME
 import com.coditory.gradle.integration.TestSkippingConditions.skipIntegrationTest
+import com.coditory.gradle.integration.shared.ClassChecker
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.testing.Test
 import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 internal object IntegrationTestTaskConfiguration {
     fun apply(project: Project) {
         val sourceSet = setupSourceSet(project)
         setupConfiguration(project)
         setupTestTask(project, sourceSet)
+        if (ClassChecker.isClassAvailable("org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension")) {
+            configureKotlinCompilation(project)
+        }
     }
 
     private fun setupSourceSet(project: Project): SourceSet {
@@ -62,5 +67,13 @@ internal object IntegrationTestTaskConfiguration {
         }
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
             .dependsOn(integrationTest)
+    }
+
+    private fun configureKotlinCompilation(project: Project) {
+        val extension = project.extensions.getByType(KotlinJvmProjectExtension::class.java)
+        extension.target.compilations.getByName(INTEGRATION_CONFIG_PREFIX) {
+            val main = extension.target.compilations.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+            it.associateWith(main)
+        }
     }
 }

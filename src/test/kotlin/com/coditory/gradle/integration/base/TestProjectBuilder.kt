@@ -39,6 +39,12 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
+    fun withKtsBuildGradle(content: String): TestProjectBuilder {
+        val buildFile = project.rootDir.resolve("build.gradle.kts")
+        buildFile.writeText(content.trimIndent().trim())
+        return this
+    }
+
     fun withBuildGradle(content: String): TestProjectBuilder {
         val buildFile = project.rootDir.resolve("build.gradle")
         buildFile.writeText(content.trimIndent().trim())
