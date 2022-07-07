@@ -179,4 +179,5 @@ jacocoTestReport {
 If you're against adding plugins to your build file, simply copy-paste the configuration from:
 - [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin)
 - [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin)
+
 ...though it's not a one-liner, be aware of the obfuscation
