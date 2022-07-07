@@ -4,7 +4,7 @@
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.4.2-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> **Zero configuration**, **single responsibility** gradle plugin for integration tests.
+**Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
@@ -12,11 +12,7 @@
 - Makes integration classpath extend test classpath and main classpath (in this order).
 - Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
 - Exposes internal scope (from main and test module) to integration tests
-
-If you're against adding plugins to your build file, you can copy-paste the configuration from:
-- [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin)
-- [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin)
-...though it's not a one-liner, be aware of the obfuscation
+- Deobfuscates build gradle from boilerplate code
 
 ## Enabling the plugin
 
@@ -177,3 +173,10 @@ jacocoTestReport {
     }
 }
 ```
+
+## The no-plugin alternative
+
+If you're against adding plugins to your build file, simply copy-paste the configuration from:
+- [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin)
+- [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin)
+...though it's not a one-liner, be aware of the obfuscation
