@@ -4,13 +4,19 @@
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.4.2-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 [![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-**Zero configuration**, **single responsibility** gradle plugin for integration tests.
+> **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
 - Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
 - Handles runtime flags parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
 - Makes integration classpath extend test classpath and main classpath (in this order).
 - Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
+- Exposes internal scope (from main and test module) to integration tests
+
+If you're against adding plugins to your build file, you can copy-paste the configuration from:
+- [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin)
+- [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin)
+...though it's not a one-liner, be aware of the obfuscation
 
 ## Enabling the plugin
 
@@ -21,6 +27,7 @@ plugins {
   id "com.coditory.integration-test" version "1.4.2"
 }
 ```
+
 ### Sample usages with different test frameworks
 See a [project](https://github.com/coditory/gradle-integration-test-plugin-sample) with all the examples.
 
@@ -83,13 +90,34 @@ tasks.withType(Test) {
 
 ```gradle
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.7.0"
     id("com.coditory.integration-test") version "1.4.2"
 }
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+```
+</p>
+</details>
+<details><summary>Kotlin + Kotest (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-kotest">project</a>)</summary>
+<p>
+
+```gradle
+plugins {
+    kotlin("jvm") version "1.7.0"
+    id("com.coditory.integration-test") version "1.4.2"
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
 }
 
 tasks.withType<Test> {
