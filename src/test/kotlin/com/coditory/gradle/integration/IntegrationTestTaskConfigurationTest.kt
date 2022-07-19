@@ -12,6 +12,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import org.junit.jupiter.api.Test
+import java.io.File
 import org.gradle.api.tasks.testing.Test as TestTask
 
 class IntegrationTestTaskConfigurationTest {
@@ -91,7 +92,9 @@ class IntegrationTestTaskConfigurationTest {
     }
 
     private fun toBuildPath(paths: List<String>, project: Project = this.project): String {
-        return paths.joinToString(":") { "${project.buildDir}/$it" }
+        return paths.joinToString(File.pathSeparator) {
+            "${project.buildDir}${File.separator}${it.replace("/", File.separator)}"
+        }
     }
 
     private fun getSourceSet(project: Project = this.project): SourceSet {
