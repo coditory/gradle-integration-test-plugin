@@ -70,10 +70,10 @@ internal object IntegrationTestTaskConfiguration {
     }
 
     private fun configureKotlinCompilation(project: Project) {
-        val extension = project.extensions.getByType(KotlinJvmProjectExtension::class.java)
-        extension.target.compilations.getByName(INTEGRATION_CONFIG_PREFIX) {
-            val main = extension.target.compilations.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            it.associateWith(main)
+        val kotlin = project.extensions.getByType(KotlinJvmProjectExtension::class.java)
+        kotlin.target.compilations.getByName(INTEGRATION_CONFIG_PREFIX) {
+            val test = kotlin.target.compilations.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+            it.associateWith(test)
         }
     }
 }
