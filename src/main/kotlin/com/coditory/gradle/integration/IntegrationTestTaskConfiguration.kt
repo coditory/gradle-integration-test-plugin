@@ -10,7 +10,6 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.testing.Test
 import org.gradle.language.base.plugins.LifecycleBasePlugin
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 internal object IntegrationTestTaskConfiguration {
     fun apply(project: Project) {
@@ -70,7 +69,10 @@ internal object IntegrationTestTaskConfiguration {
     }
 
     private fun configureKotlinCompilation(project: Project) {
-        val kotlin = project.extensions.getByType(KotlinJvmProjectExtension::class.java)
+        // coditory/gradle-build-plugin fails with `extensions.getByType`
+        // it's a special case when another kotlin plugin applies this plugin in tests
+        val kotlin = project.extensions.findByType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension::class.java)
+            ?: return
         kotlin.target.compilations.getByName(INTEGRATION_CONFIG_PREFIX) {
             val test = kotlin.target.compilations.getByName(SourceSet.TEST_SOURCE_SET_NAME)
             it.associateWith(test)
