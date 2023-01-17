@@ -1,13 +1,10 @@
 name: Build
 
-on:
-  workflow_dispatch:
-  push:
+on: [pull_request, push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' || startsWith(github.ref, 'refs/tags/') == false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
