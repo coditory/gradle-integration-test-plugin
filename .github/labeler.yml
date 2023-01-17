@@ -1,0 +1,29 @@
+source:
+  - "src/**"
+
+build:
+  - "**/*.gradle"
+  - "**/*.gradle.kts"
+
+ci:
+  - ".github/**"
+
+documentation:
+  - "**/*.md"
+  - "docs/**"
+
+license:
+  - "LICENSE"
+
+gradle:
+  - "gradlew"
+  - "gradlew.bat"
+  - ".gradle/**"
+  - "gradle/**"
+
+git:
+  - ".gitignore"
+
+style:
+  - ".editorconfig"
+  - ".idea/codeStyles/**"
