@@ -1,7 +1,10 @@
-Thanks for submitting a pull request!
+<!-- Thanks for submitting a pull request! -->
+## Changes
+<!-- Shortly describe what you want to accomplish with this PR -->
+<!-- Add a link to the issue if available -->
 
-- Please check that there is no similar [pull request](https://github.com/coditory/gradle-integration-test-plugin/pulls) already submitted
-- Please provide enough information so that others can review your pull request
-- Add a [reference](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository) to a related [issue](https://github.com/coditory/gradle-integration-test-plugin/issues) if possible
-
-For more information, see the [CONTRIBUTING guide](https://github.com/coditory/gradle-integration-test-plugin/blob/main/.github/CONTRIBUTING.md).
+## Checklist
+- [ ] I have tested that there is no similar [pull request](https://github.com/coditory/gradle-integration-test-plugin/pulls) already submitted
+- [ ] I have read [contributing.md](https://github.com/coditory/gradle-integration-test-plugin/blob/master/.github/CONTRIBUTING.md) and applied to the rules
+- [ ] I have unit tested code changes and performed a self-review
+- [ ] I have [tested plugin change locally](https://github.com/coditory/gradle-integration-test-plugin/blob/master/.github/CONTRIBUTING.md#validate-changes-locally) on a sample project

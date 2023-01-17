@@ -18,7 +18,7 @@ on:
         required: true
         default: RELEASE
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   release:
