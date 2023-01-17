@@ -1,6 +1,6 @@
 name: "Pull Request"
 
-on: [ pull_request_target ]
+on: [pull_request_target]
 
 jobs:
   label-pr:
@@ -14,7 +14,6 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
   dependabot:
-    needs: [ build ]
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     permissions:
@@ -26,12 +25,6 @@ jobs:
         uses: dependabot/fetch-metadata@v1.3.1
 
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Enable auto-merge Dependabot PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
