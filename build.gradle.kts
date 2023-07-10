@@ -7,7 +7,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.2.0"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 repositories {
