@@ -97,7 +97,7 @@ jobs:
 
       - name: Setup JDK
         if: inputs.publish != 'SKIP'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           cache: gradle
