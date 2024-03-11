@@ -19,7 +19,7 @@ ktlint {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
