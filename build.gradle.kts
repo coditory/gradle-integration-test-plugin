@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    `kotlin-dsl`
     kotlin("jvm") version "1.9.24"
     id("jacoco")
     id("com.github.kt3k.coveralls") version "2.12.2"
