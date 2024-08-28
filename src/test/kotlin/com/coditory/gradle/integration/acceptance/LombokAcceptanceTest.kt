@@ -27,7 +27,7 @@ class LombokAcceptanceTest {
                 }
     
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
     
                 dependencies {
