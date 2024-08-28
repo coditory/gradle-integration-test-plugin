@@ -26,7 +26,7 @@ class CommandLineAcceptanceTest {
                 }
     
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
     
                 dependencies {
