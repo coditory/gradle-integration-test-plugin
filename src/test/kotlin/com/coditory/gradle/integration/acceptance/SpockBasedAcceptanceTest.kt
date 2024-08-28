@@ -17,7 +17,7 @@ class SpockBasedAcceptanceTest {
             }
 
             repositories {
-                jcenter()
+                mavenCentral()
             }
 
             dependencies {
