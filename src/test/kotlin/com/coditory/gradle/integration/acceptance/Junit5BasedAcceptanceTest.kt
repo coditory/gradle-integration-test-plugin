@@ -27,7 +27,7 @@ class Junit5BasedAcceptanceTest {
                 }
     
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
     
                 dependencies {
