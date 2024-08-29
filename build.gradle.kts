@@ -64,18 +64,15 @@ coveralls {
 // Releasing the plugin:
 // ./gradlew release && ./gradlew publishPlugins
 gradlePlugin {
+    website = "https://github.com/coditory/gradle-integration-test-plugin"
+    vcsUrl = "https://github.com/coditory/gradle-integration-test-plugin"
     plugins {
         create("integrationTestPlugin") {
             id = "com.coditory.integration-test"
             implementationClass = "com.coditory.gradle.integration.IntegrationTestPlugin"
             displayName = "Integration test plugin"
             description = "Gradle Plugin for integration tests"
+            tags = listOf("test", "integration", "integration-test", "java-integration-test")
         }
     }
-}
-
-pluginBundle {
-    website = "https://github.com/coditory/gradle-integration-test-plugin"
-    vcsUrl = "https://github.com/coditory/gradle-integration-test-plugin"
-    tags = listOf("test", "integration", "integration-test", "java-integration-test")
 }
