@@ -10,7 +10,7 @@ internal object JacocoTaskConfiguration {
         if (project.pluginManager.hasPlugin("jacoco")) {
             project.jacocoTestReport {
                 executionData(
-                    project.file("${project.layout.buildDirectory.asFile.get()}/jacoco/${INTEGRATION_TEST_TASK_NAME}.exec"),
+                    project.file("${project.layout.buildDirectory.asFile.get()}/jacoco/$INTEGRATION_TEST_TASK_NAME.exec"),
                 )
             }
         }
