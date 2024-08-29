@@ -22,8 +22,8 @@ class SpockBasedAcceptanceTest {
 
             dependencies {
                 testImplementation "junit:junit:4.12"
-                testImplementation "org.codehaus.groovy:groovy-all:2.4.13"
-                testImplementation "org.spockframework:spock-core:1.1-groovy-2.4"
+                testImplementation "org.codehaus.groovy:groovy-all:3.0.22"
+                testImplementation "org.spockframework:spock-core:2.3-groovy-3.0"
             }
 
             test {
