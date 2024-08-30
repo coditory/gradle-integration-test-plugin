@@ -23,21 +23,19 @@ class KotlinInternalScopeAcceptanceTest {
             .withKtsBuildGradle(
                 """
                 plugins {
-                    kotlin("jvm") version "1.7.0"
+                    kotlin("jvm") version "2.0.20"
                     id("com.coditory.integration-test")
                 }
-                
-                // apply(plugin = "com.coditory.integration-test")
-    
+
                 repositories {
                     mavenCentral()
                 }
-    
+
                 dependencies {
-                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
                 }
-    
+
                 tasks.withType<Test> {
                     useJUnitPlatform()
                     testLogging {
@@ -45,26 +43,26 @@ class KotlinInternalScopeAcceptanceTest {
                         setExceptionFormat("full")
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/main/kotlin/PublicObject.kt",
                 """
                 object PublicObject {
                     val SOME_VALUE = "Public"
                 }
-                """
+                """,
             ).withFile(
                 "src/main/kotlin/InternalObject.kt",
                 """
                 object InternalObject {
                     val SOME_VALUE = "Internal"
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/kotlin/TestIntgSpec.kt",
                 """
                 $commonImports
-    
+
                 class TestIntgSpec {
                     @Test
                     fun shouldSeePublicObjectOnClasspath() {
@@ -76,12 +74,12 @@ class KotlinInternalScopeAcceptanceTest {
                         assertEquals("Internal", InternalObject.SOME_VALUE)
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/kotlin/TestUnitSpec.kt",
                 """
                 $commonImports
-    
+
                 class TestUnitSpec {
                     @Test
                     fun shouldSeePublicObjectOnClasspath() {
@@ -93,9 +91,8 @@ class KotlinInternalScopeAcceptanceTest {
                         assertEquals("Internal", InternalObject.SOME_VALUE)
                     }
                 }
-                """
-            )
-            .build()
+                """,
+            ).build()
     }
 
     @ParameterizedTest(name = "should make internal scope visible in integration tests {0}")
