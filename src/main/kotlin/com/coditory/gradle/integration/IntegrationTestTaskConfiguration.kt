@@ -40,7 +40,7 @@ internal object IntegrationTestTaskConfiguration {
             "testImplementation",
             "testRuntime",
             "testRuntimeClasspath",
-            "testRuntimeOnly"
+            "testRuntimeOnly",
         )
             .filter { project.configurations.names.contains(it) }
             .forEach { setupConfiguration(project, it) }

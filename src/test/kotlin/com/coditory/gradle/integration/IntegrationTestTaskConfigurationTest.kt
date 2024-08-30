@@ -33,9 +33,9 @@ class IntegrationTestTaskConfigurationTest {
                         "classes/java/test",
                         "resources/test",
                         "classes/java/main",
-                        "resources/main"
-                    )
-                )
+                        "resources/main",
+                    ),
+                ),
             )
     }
 
@@ -75,9 +75,9 @@ class IntegrationTestTaskConfigurationTest {
                 "resources/test",
                 "classes/java/main",
                 "classes/groovy/main",
-                "resources/main"
+                "resources/main",
             ),
-            project
+            project,
         )
         assertThat(getSourceSet(project).runtimeClasspath.asPath)
             .isEqualTo(expectedBuildPath)
