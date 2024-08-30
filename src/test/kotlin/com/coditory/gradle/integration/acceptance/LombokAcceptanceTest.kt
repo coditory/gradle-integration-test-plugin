@@ -15,7 +15,7 @@ class LombokAcceptanceTest {
         val commonImports =
             """
             import org.junit.jupiter.api.Test;
-            
+
             import static org.junit.jupiter.api.Assertions.assertEquals;
             import static org.junit.jupiter.api.Assertions.assertNotEquals;
             """.trimIndent()
@@ -25,20 +25,20 @@ class LombokAcceptanceTest {
                 plugins {
                     id 'com.coditory.integration-test'
                 }
-    
+
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
-    
+
                 dependencies {
-                    compileOnly "org.projectlombok:lombok:1.18.20"
-                    annotationProcessor "org.projectlombok:lombok:1.18.20"
-                    testCompileOnly "org.projectlombok:lombok:1.18.20"
-                    testAnnotationProcessor "org.projectlombok:lombok:1.18.20"
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+                    compileOnly "org.projectlombok:lombok:1.18.34"
+                    annotationProcessor "org.projectlombok:lombok:1.18.34"
+                    testCompileOnly "org.projectlombok:lombok:1.18.34"
+                    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
+                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                 }
-    
+
                 test {
                     useJUnitPlatform()
                     testLogging {
@@ -46,42 +46,42 @@ class LombokAcceptanceTest {
                         setExceptionFormat("full")
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/main/java/MainValueExample.java",
                 """
                 import lombok.Value;
-                    
+
                 @Value
                 public class MainValueExample {
                     private final String name;
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/TestValueExample.java",
                 """
                 import lombok.Value;
-                    
+
                 @Value
                 public class TestValueExample {
                     private final String name;
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/java/IntgValueExample.java",
                 """
                 import lombok.Value;
-                    
+
                 @Value
                 public class IntgValueExample {
                     private final String name;
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestIntgSpec {
                     @Test
                     public void shouldValueObjectsFromMain() {
@@ -101,12 +101,12 @@ class LombokAcceptanceTest {
                         assertNotEquals(new IntgValueExample("X"), new IntgValueExample("Y"));
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/TestUnitSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestUnitSpec {
                     @Test
                     public void shouldValueObjectsFromMain() {
@@ -120,13 +120,12 @@ class LombokAcceptanceTest {
                         assertNotEquals(new TestValueExample("X"), new TestValueExample("Y"));
                     }
                 }
-                """
-            )
-            .build()
+                """,
+            ).build()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "6.0"])
+    @ValueSource(strings = ["current", "7.3"])
     fun `should run unit tests and integration tests with lombok`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)

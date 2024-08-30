@@ -93,7 +93,7 @@ class IntegrationTestTaskConfigurationTest {
 
     private fun toBuildPath(paths: List<String>, project: Project = this.project): String {
         return paths.joinToString(File.pathSeparator) {
-            "${project.buildDir}${File.separator}${it.replace("/", File.separator)}"
+            "${project.layout.buildDirectory.get()}${File.separator}${it.replace("/", File.separator)}"
         }
     }
 

@@ -15,42 +15,43 @@ class Junit4BasedAcceptanceTest {
         val commonImports =
             """
             import org.junit.Test;
-            
+
             import static org.junit.Assert.assertEquals;
             import static base.ClasspathFileReader.readFile;
             """.trimIndent()
-        return TestProjectBuilder.project()
+        return TestProjectBuilder
+            .project()
             .withBuildGradle(
                 """
                 plugins {
                     id 'com.coditory.integration-test'
                 }
-    
+
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
-    
+
                 dependencies {
-                    testImplementation "junit:junit:4.12"
+                    testImplementation "junit:junit:4.13.2"
                 }
-                
+
                 test {
                     testLogging {
                         events("passed", "failed", "skipped")
                         setExceptionFormat("full")
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/base/ClasspathFileReader.java",
                 """
                 package base;
-                
+
                 import java.net.URI;
                 import java.nio.file.Files;
                 import java.nio.file.Path;
                 import java.nio.file.Paths;
-                    
+
                 public class ClasspathFileReader {
                     public static String readFile(String name) {
                         try {
@@ -64,40 +65,40 @@ class Junit4BasedAcceptanceTest {
                         }
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/ConstantValues.java",
                 """
                 public class ConstantValues {
                     public static final String MODULE = "test";
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/java/ConstantValues.java",
                 """
                 public class ConstantValues {
                     public static final String MODULE = "integration";
                 }
-                """
+                """,
             ).withFile(
                 "src/main/java/ConstantValues.java",
                 """
                 public class ConstantValues {
                     public static final String MODULE = "main";
                 }
-                """
+                """,
             ).withFile(
                 "src/main/java/MainConstantValues.java",
                 """
                 public class MainConstantValues {
                     public static final String MODULE = "main";
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestIntgSpec {
                     @Test
                     public void shouldReadATxtFileFromMain() {
@@ -113,23 +114,23 @@ class Junit4BasedAcceptanceTest {
                     public void shouldReadCTxtFileFromTest() {
                         assertEquals("integration-c", readFile("c.txt"));
                     }
-    
+
                     @Test
                     public void shouldReadConstantValueFromIntModule() {
                         assertEquals("integration", ConstantValues.MODULE);
                     }
-                    
+
                     @Test
                     public void shouldReadConstantValueFromMainModule() {
                         assertEquals("main", MainConstantValues.MODULE);
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/TestUnitSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestUnitSpec {
                     @Test
                     public void shouldReadATxtFromMain() {
@@ -140,18 +141,18 @@ class Junit4BasedAcceptanceTest {
                     public void shouldReadBTxtFromTest() {
                         assertEquals("test-b", readFile("b.txt"));
                     }
-    
+
                     @Test
                     public void shouldReadConstantValueFromTestModule() {
                         assertEquals("test", ConstantValues.MODULE);
                     }
-                    
+
                     @Test
                     public void shouldReadConstantValueFromMainModule() {
                         assertEquals("main", MainConstantValues.MODULE);
                     }
                 }
-                """
+                """,
             ).withFile("src/main/resources/a.txt", "main-a")
             .withFile("src/main/resources/b.txt", "main-b")
             .withFile("src/main/resources/c.txt", "main-c")
@@ -162,7 +163,7 @@ class Junit4BasedAcceptanceTest {
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "7.3"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)

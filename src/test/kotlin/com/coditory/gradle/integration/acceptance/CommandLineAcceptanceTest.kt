@@ -18,22 +18,23 @@ class CommandLineAcceptanceTest {
             import static org.junit.jupiter.api.Assertions.assertEquals;
             import org.junit.jupiter.api.Test;
             """.trimIndent()
-        return TestProjectBuilder.project()
+        return TestProjectBuilder
+            .project()
             .withBuildGradle(
                 """
                 plugins {
                     id 'com.coditory.integration-test'
                 }
-    
+
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
-    
+
                 dependencies {
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
+                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                 }
-                
+
                 test {
                     useJUnitPlatform()
                     testLogging {
@@ -41,41 +42,41 @@ class CommandLineAcceptanceTest {
                         setExceptionFormat("full")
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestIntgSpec {
                     @Test
                     public void shouldPassSampleIntegrationSpec() {
                         assertEquals(true, true);
                     }
-    
+
                     @Test
                     public void shouldPassSecondSampleIntegrationSpec() {
                         assertEquals(true, true);
                     }
                 }
-                """
+                """,
             ).withFile(
                 "src/test/java/TestUnitSpec.java",
                 """
                 $commonImports
-    
+
                 public class TestUnitSpec {
                     @Test
                     public void shouldPassSampleUnitSpec() {
                         assertEquals(true, true);
                     }
                 }
-                """
+                """,
             ).build()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "7.3"])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)
