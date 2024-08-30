@@ -7,11 +7,13 @@ on:
         type: string
         description: |
           Release version in semantic format (like: 1.2.3).
-          Default: a version with incremented patch number.
+          No value means a new patch version.
         required: false
       publish:
         type: choice
-        description: Artifact publication.
+        description: |
+          Artifact publication.
+          Use for creating draft release notes.
         options:
           - SKIP
           - RELEASE

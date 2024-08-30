@@ -1,0 +1,17 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{kt,kts}]
+indent_size = 4
+ktlint_code_style = intellij_idea
+ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = unset
+ktlint_ignore_back_ticked_identifier = true
+ktlint_function_signature_body_expression_wrapping = default
+ktlint_standard_function-expression-body = disabled

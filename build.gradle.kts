@@ -5,7 +5,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.2.2"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 repositories {
@@ -35,7 +35,7 @@ java {
 }
 
 ktlint {
-    version = "0.45.2"
+    version = "1.3.1"
 }
 
 tasks.withType<Test> {
