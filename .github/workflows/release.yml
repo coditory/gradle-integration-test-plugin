@@ -3,44 +3,29 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      section:
+        type: choice
+        description: Create release tag by incrementing sem-ver section.
+        options:
+          - PATCH
+          - MINOR
+          - MAJOR
+          - RERUN
+          - MANUAL
+        required: true
+        default: PATCH
       version:
         type: string
         description: |
-          Release version in semantic format (like: 1.2.3).
-          No value means a new patch version.
+          Manually setup version (like: 1.2.3).
         required: false
-      publish:
-        type: choice
-        description: |
-          Artifact publication.
-          Use for creating draft release notes.
-        options:
-          - SKIP
-          - RELEASE
-        required: true
-        default: RELEASE
-  release:
-    types: [published]
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate build succeeded
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          declare -r BUILD_SUCCESS="$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/actions/runs?status=success\&head_sha=${{ github.sha }} \
-            | jq 'limit(1; .workflow_runs[] | select(.name == "Build" and .conclusion == "success"))')"
-          if [ -z "$BUILD_SUCCESS" ]; then
-            echo "Commit did not pass Build!"
-            exit 1
-          fi
-
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.CI_TOKEN }}
@@ -48,104 +33,43 @@ jobs:
       - name: Get versions
         id: versions
         env:
-          NEXT_INPUT_VERSION: ${{ inputs.version }}
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          MANUAL_VERSION: ${{ inputs.version }}
+          INCREMENT_SECTION: ${{ inputs.section }}
         run: |
-          declare -r GIT_VERSION="$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1 | cut -c2-)"
+          declare -r GIT_VERSION="$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1 | cut -c2-)"
           declare -r VERSION=${GIT_VERSION:-0.0.0}
           declare -r MAJOR="$(echo "$VERSION" | cut -d. -f1)"
           declare -r MINOR="$(echo "$VERSION" | cut -d. -f2)"
           declare -r PATCH="$(echo "$VERSION" | cut -d. -f3)"
-          declare -r NEXT_TAG_VERSION="$([[ "$TAG_NAME" =~ v.* ]] \
-            && (echo "$TAG_NAME" | cut -c2-) \
-            || echo "$TAG_NAME")"
-          declare -r NEXT_MANUAL_VERSION="${NEXT_INPUT_VERSION:-$NEXT_TAG_VERSION}"
-          declare -r NEXT_PATCH_VERSION="$MAJOR.$MINOR.$(( $PATCH + 1 ))"
-          declare -r NEXT_VERSION="${NEXT_MANUAL_VERSION:-$NEXT_PATCH_VERSION}"
-          echo ::set-output name=version::$VERSION
-          echo ::set-output name=next_version::$NEXT_VERSION
+          declare NEXT_VERSION=""
+          if [ "$INCREMENT_SECTION" == "MANUAL" ]; then
+            if [ "$MANUAL_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]; then
+              NEXT_VERSION="$MANUAL_VERSION"
+            else
+              echo "Invalid manual version: $MANUAL_VERSION" >&2
+              return 1
+            fi
+          elif [ "$INCREMENT_SECTION" == "PATCH" ]; then
+            NEXT_VERSION="$MAJOR.$MINOR.$(( PATCH + 1 ))"
+          elif [ "$INCREMENT_SECTION" == "MINOR" ]; then
+            NEXT_VERSION="$MAJOR.$(( MINOR + 1 )).0"
+          elif [ "$INCREMENT_SECTION" == "MAJOR" ]; then
+            NEXT_VERSION="$(( MAJOR + 1 )).0.0"
+          elif [ "$INCREMENT_SECTION" == "RERUN" ]; then
+            NEXT_VERSION="$VERSION"
+            git tag -d "v$NEXT_VERSION" || echo "Local tag does not exist: v$NEXT_VERSION"
+            git push --delete origin "v$NEXT_VERSION" || echo "Remote tag does not exist: v$NEXT_VERSION"
+          else
+            echo "Unrecognized option: $INCREMENT_SECTION" >&2
+            return 1
+          fi
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo -e "VERSION: $VERSION\nNEXT_VERSION: $NEXT_VERSION"
 
-      - name: Import GPG key
-        id: gpg
-        uses: crazy-max/ghaction-import-gpg@v5
-        if: |
-          github.event_name != 'release'
-          && github.ref == 'refs/heads/master'
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_committer_name: Coditory Bot
-          git_committer_email: bot@coditory.com
-
-      - name: Update version in README (master only)
-        if: steps.gpg.conclusion == 'success'
+      - name: Create Release Tag
         env:
-          PREV_VERSION: ${{ steps.versions.outputs.version }}
           NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
         run: |
-          declare -r ESC_PREV_VERSION="${PREV_VERSION//./\\.}"
-          echo "Changing: $PREV_VERSION -> $NEXT_VERSION"
-          sed -i "s|${ESC_PREV_VERSION}|${NEXT_VERSION}|" README.md
-          if [ -n "$(git status --porcelain)" ]; then
-            git add -A
-            git commit -a -m "Update version $PREV_VERSION -> $NEXT_VERSION" -m "[ci skip]"
-            git push origin master
-          else
-            echo "Nothing changed. Skipping commit."
-          fi
-
-      - name: Setup JDK
-        if: inputs.publish != 'SKIP'
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          cache: gradle
-          distribution: temurin
-
-      - name: Publish to Gradle Plugin Portal
-        if: |
-          github.event_name == 'release'
-          || inputs.publish == 'RELEASE'
-        env:
-          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
-          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
-        run: |
-          ./gradlew publishPlugins \
-            -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
-            -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET \
-            -Pversion=$NEXT_VERSION
-
-      - name: Generate release notes
-        id: notes
-        if: |
-          github.event_name != 'release'
-          && github.ref == 'refs/heads/master'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREV_VERSION: ${{ steps.versions.outputs.version }}
-          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
-        run: |
-          declare -r NOTES="$(gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/releases/generate-notes \
-            -f tag_name="v$NEXT_VERSION" \
-            -f target_commitish='master' \
-            -f previous_tag_name="v$PREV_VERSION" \
-            | jq -r '.body')"
-          declare -r ESCAPED="${NOTES//$'\n'/'%0A'}"
-          echo ::set-output name=notes::$ESCAPED
-
-      - name: Create github release (master only)
-        if: steps.notes.conclusion == 'success'
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          body: ${{ steps.notes.outputs.notes }}
-          draft: ${{ inputs.publish == 'SKIP' }}
-          tag: v${{ steps.versions.outputs.next_version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          git tag "v$NEXT_VERSION"
+          git push origin "v$NEXT_VERSION"
