@@ -14,13 +14,10 @@ cp scripts/git/pre-commit .git/hooks/pre-commit
 ```
 
 ## Commit messages
-
 Before writing a commit message read [this article](https://chris.beams.io/posts/git-commit/).
 
 ## Build
-
 Before pushing any changes make sure project builds without errors with:
-
 ```
 ./gradlew build
 ```
@@ -38,7 +35,7 @@ You can check style with:
 
 ## Unit tests and coverage
 
-We use [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) for testing.
+Use [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) for testing.
 
 Uou can check coverage in `build/reports/kover/` after running:
 
@@ -52,23 +49,30 @@ Before submitting a pull request test your changes on a local project.
 There are few ways for testing locally a gradle plugin:
 
 **Publish plugin to the local maven repository**
-Publish plugin to local repository with:
 
-```sh
-./gradlew publishToMavenLocal
-```
-
-...and add section to `settings.gradle.kts` to the sample project (that uses the tested plugin):
-
-```kt
-// Instruct a sample project to use maven local to find the plugin
-pluginManagement {
-  repositories {
-    mavenLocal()
-    gradlePluginPortal()
+- Publish plugin to your local maven repository (`$HOME/.m2`) with:
+  ```sh
+  ./gradlew publishToMavenLocal
+  ```
+  It will publish the plugin with `unspecified` version.
+- Add section to `settings.gradle.kts`:
+  ```kt
+  // Instruct a sample project to use maven local to find the plugin
+  pluginManagement {
+    repositories {
+      mavenLocal()
+      gradlePluginPortal()
+    }
   }
-}
-```
+  ```
+- Add dependency:
+  ```kt
+  plugins {
+    id("com.coditory.integration-test") version "unspecified"
+  }
+  ```
+- You can skip last two steps and just use https://github.com/coditory/gradle-integration-test-plugin-sample and change
+  plugin version to `unspecified`.
 
 **Import plugin jar**
 Add plugin jar to the sample project (that uses the tested plugin):

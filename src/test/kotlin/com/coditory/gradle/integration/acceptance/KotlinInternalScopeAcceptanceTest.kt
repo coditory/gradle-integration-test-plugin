@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
 import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -59,7 +61,7 @@ class KotlinInternalScopeAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/kotlin/TestIntgSpec.kt",
+                "src/integrationTest/kotlin/TestIntgSpec.kt",
                 """
                 $commonImports
 
@@ -96,7 +98,7 @@ class KotlinInternalScopeAcceptanceTest {
     }
 
     @ParameterizedTest(name = "should make internal scope visible in integration tests {0}")
-    @ValueSource(strings = ["7.4.2"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)
