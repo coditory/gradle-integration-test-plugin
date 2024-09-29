@@ -81,7 +81,7 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
             return TestProjectBuilder(createProjectDir(name), name)
         }
 
-        fun projectWithPlugins(name: String = "sample-project"): TestProjectBuilder {
+        private fun projectWithPlugins(name: String = "sample-project"): TestProjectBuilder {
             return project(name)
                 .withPlugins(JavaPlugin::class, IntegrationTestPlugin::class)
         }

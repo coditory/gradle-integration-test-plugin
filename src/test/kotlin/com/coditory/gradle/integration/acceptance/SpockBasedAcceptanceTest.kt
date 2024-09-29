@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
 import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -49,7 +51,7 @@ class SpockBasedAcceptanceTest {
             }
             """,
             ).withFile(
-                "src/integration/groovy/ConstantValues.groovy",
+                "src/integrationTest/groovy/ConstantValues.groovy",
                 """
             class ConstantValues {
                 static final String MODULE = "integration"
@@ -70,7 +72,7 @@ class SpockBasedAcceptanceTest {
             }
             """,
             ).withFile(
-                "src/integration/groovy/TestIntgSpec.groovy",
+                "src/integrationTest/groovy/TestIntgSpec.groovy",
                 """
             import spock.lang.Specification
             import static ClasspathFileReader.readFile
@@ -130,11 +132,11 @@ class SpockBasedAcceptanceTest {
             .withFile("src/main/resources/c.txt", "main-c")
             .withFile("src/test/resources/b.txt", "test-b")
             .withFile("src/test/resources/c.txt", "test-c")
-            .withFile("src/integration/resources/c.txt", "integration-c")
+            .withFile("src/integrationTest/resources/c.txt", "integration-c")
             .build()
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "7.3"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)

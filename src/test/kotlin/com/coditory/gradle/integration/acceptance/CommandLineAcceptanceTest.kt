@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -44,7 +46,7 @@ class CommandLineAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/java/TestIntgSpec.java",
+                "src/integrationTest/java/TestIntgSpec.java",
                 """
                 $commonImports
 
@@ -75,8 +77,12 @@ class CommandLineAcceptanceTest {
             ).build()
     }
 
+    companion object {
+        const val ABC = ""
+    }
+
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "7.3"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)
@@ -115,7 +121,7 @@ class CommandLineAcceptanceTest {
     @Test
     fun `should skip integration tests`() {
         // when
-        val result = runGradle(project, listOf("check", "-PskipIntegrationTests"))
+        val result = runGradle(project, listOf("check", "-PskipIntegrationTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
@@ -124,7 +130,7 @@ class CommandLineAcceptanceTest {
     @Test
     fun `should skip all tests`() {
         // when
-        val result = runGradle(project, listOf("check", "-PskipTests"))
+        val result = runGradle(project, listOf("check", "-PskipTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
@@ -133,7 +139,7 @@ class CommandLineAcceptanceTest {
     @Test
     fun `should skip unit tests`() {
         // when
-        val result = runGradle(project, listOf("check", "-PskipUnitTests"))
+        val result = runGradle(project, listOf("check", "-PskipUnitTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
