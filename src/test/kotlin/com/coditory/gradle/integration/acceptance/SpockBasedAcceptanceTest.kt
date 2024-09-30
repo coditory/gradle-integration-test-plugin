@@ -25,6 +25,8 @@ class SpockBasedAcceptanceTest {
 
             dependencies {
                 testImplementation "org.spockframework:spock-core:2.4-M4-groovy-4.0"
+                // sample integration test dependency
+                integrationTestImplementation "com.coditory.quark:quark-context:0.1.22"
             }
 
             test {
