@@ -2,17 +2,17 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_INTEGRATION_TEST_FLAG_NAME
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_TEST_ALL_FLAG_NAME
-import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_TEST_FLAG_NAME
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_UNIT_TEST_FLAG_NAME
 import org.gradle.api.Project
 
 internal object TestSkippingConditions {
     fun skipTestAll(project: Project): Boolean {
         return hasTestAllFlag(project) ||
-            (hasSkipTestFlag(project) && hasSkipIntegrationTestFlag(project))
+            (hasSkipUnitTestFlag(project) && hasSkipIntegrationTestFlag(project))
     }
 
-    fun skipTest(project: Project): Boolean {
-        return hasTestAllFlag(project) || hasSkipTestFlag(project)
+    fun skipUnitTest(project: Project): Boolean {
+        return hasTestAllFlag(project) || hasSkipUnitTestFlag(project)
     }
 
     fun skipIntegrationTest(project: Project): Boolean {
@@ -23,8 +23,8 @@ internal object TestSkippingConditions {
         return hasPropertyFlag(project, SKIP_TEST_ALL_FLAG_NAME)
     }
 
-    private fun hasSkipTestFlag(project: Project): Boolean {
-        return hasPropertyFlag(project, SKIP_TEST_FLAG_NAME)
+    private fun hasSkipUnitTestFlag(project: Project): Boolean {
+        return hasPropertyFlag(project, SKIP_UNIT_TEST_FLAG_NAME)
     }
 
     private fun hasSkipIntegrationTestFlag(project: Project): Boolean {

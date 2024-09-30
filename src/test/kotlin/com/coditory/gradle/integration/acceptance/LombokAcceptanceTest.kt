@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
 import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -68,7 +70,7 @@ class LombokAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/java/IntgValueExample.java",
+                "src/integrationTest/java/IntgValueExample.java",
                 """
                 import lombok.Value;
 
@@ -78,7 +80,7 @@ class LombokAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/java/TestIntgSpec.java",
+                "src/integrationTest/java/TestIntgSpec.java",
                 """
                 $commonImports
 
@@ -125,7 +127,7 @@ class LombokAcceptanceTest {
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "7.3"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests with lombok`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)
