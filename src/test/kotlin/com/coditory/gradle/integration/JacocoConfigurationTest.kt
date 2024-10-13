@@ -22,7 +22,7 @@ class JacocoConfigurationTest {
         assertThat(executionData.asPath).isEqualTo(
             project.toBuildPath(
                 "jacoco/test.exec",
-                "jacoco/integrationTest.exec",
+                "jacoco/integration.exec",
             ),
         )
     }

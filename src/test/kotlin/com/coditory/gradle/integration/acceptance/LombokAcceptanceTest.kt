@@ -70,7 +70,7 @@ class LombokAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/IntgValueExample.java",
+                "src/integration/java/IntgValueExample.java",
                 """
                 import lombok.Value;
 
@@ -80,7 +80,7 @@ class LombokAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/TestIntgSpec.java",
+                "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
 

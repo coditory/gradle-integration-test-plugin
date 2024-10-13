@@ -1,6 +1,6 @@
 package com.coditory.gradle.integration
 
-import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION
 import org.gradle.api.Project
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
@@ -10,17 +10,17 @@ internal object JacocoTaskConfiguration {
     fun apply(project: Project) {
         if (project.pluginManager.hasPlugin("jacoco")) {
             var dstFile: String? = null
-            project.tasks.named(INTEGRATION_TEST) { task ->
+            project.tasks.named(INTEGRATION) { task ->
                 val jacocoTaskExtension = task.extensions.getByType(JacocoTaskExtension::class.java)
                 dstFile = jacocoTaskExtension.destinationFile?.path
             }
             if (dstFile != null) {
                 project.tasks.withType(JacocoReport::class.java) { task ->
                     task.executionData(dstFile)
-                    task.mustRunAfter(INTEGRATION_TEST)
+                    task.mustRunAfter(INTEGRATION)
                 }
                 project.tasks.withType(JacocoCoverageVerification::class.java) { task ->
-                    task.mustRunAfter(INTEGRATION_TEST)
+                    task.mustRunAfter(INTEGRATION)
                 }
             }
         }

@@ -36,7 +36,7 @@ class Junit5BasedAcceptanceTest {
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
                     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                     // sample integration test dependency
-                    integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
+                    integrationImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
                 tasks.withType(Test) {
@@ -79,7 +79,7 @@ class Junit5BasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/ConstantValues.java",
+                "src/integration/java/ConstantValues.java",
                 """
                 public class ConstantValues {
                     public static final String MODULE = "integration";
@@ -100,7 +100,7 @@ class Junit5BasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/TestIntgSpec.java",
+                "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
 
@@ -163,7 +163,7 @@ class Junit5BasedAcceptanceTest {
             .withFile("src/main/resources/c.txt", "main-c")
             .withFile("src/test/resources/b.txt", "test-b")
             .withFile("src/test/resources/c.txt", "test-c")
-            .withFile("src/integrationTest/resources/c.txt", "integration-c")
+            .withFile("src/integration/resources/c.txt", "integration-c")
             .build()
     }
 
@@ -174,6 +174,6 @@ class Junit5BasedAcceptanceTest {
         val result = runGradle(project, listOf("check"), gradleVersion)
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 }

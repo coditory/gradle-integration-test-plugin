@@ -46,7 +46,7 @@ class CommandLineAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/TestIntgSpec.java",
+                "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
 
@@ -84,7 +84,16 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("check"), gradleVersion)
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
+    @ParameterizedTest(name = "should run integration tests on integrationTest command for gradle {0}")
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
+    fun `should run integration tests on integrationTest command`(gradleVersion: String?) {
+        // when
+        val result = runGradle(project, listOf("integrationTest"), gradleVersion)
+        // then
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 
     @Test
@@ -93,7 +102,7 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("test"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isNull()
+        assertThat(result.task(":integration")?.outcome).isNull()
     }
 
     @Test
@@ -102,7 +111,7 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("testAll"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 
     @Test
@@ -111,7 +120,7 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("check", "-x", "integrationTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isNull()
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
 
     @Test
@@ -120,7 +129,7 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("check", "-PskipIntegrationTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
 
     @Test
@@ -129,7 +138,7 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("check", "-PskipTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
 
     @Test
@@ -138,6 +147,6 @@ class CommandLineAcceptanceTest {
         val result = runGradle(project, listOf("check", "-PskipUnitTest"))
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
-        assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 }
