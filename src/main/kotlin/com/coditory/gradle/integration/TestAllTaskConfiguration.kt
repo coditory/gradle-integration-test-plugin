@@ -9,7 +9,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
 internal object TestAllTaskConfiguration {
     fun apply(project: Project) {
         val testAllTask = project.tasks.create(TEST_ALL_TASK_NAME)
-        testAllTask.description = "Runs all tests."
+        testAllTask.description = "Runs all test suites."
         testAllTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
         testAllTask.onlyIf { !skipTestAll(project) }
         project.tasks.withType(Test::class.java).forEach {

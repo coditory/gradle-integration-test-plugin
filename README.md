@@ -1,30 +1,40 @@
 # Integration Test Gradle Plugin
+
 [![Build](https://github.com/coditory/gradle-integration-test-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/coditory/gradle-integration-test-plugin/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-integration-test-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-integration-test-plugin?branch=master)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.5.1-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
-[![Join the chat at https://gitter.im/coditory/gradle-integration-test-plugin](https://badges.gitter.im/coditory/gradle-integration-test-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Coverage](https://codecov.io/gh/coditory/gradle-integration-test-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/coditory/gradle-integration-test-plugin)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.5.0-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+
+> Single line in build.gradle.kts to enable integration tests in JVM projects
 
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
-- Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
-- Handles runtime flags parameters to skip tests: `skipTests`, `skipIntegrationTests`, `skipUnitTests`.
+- Adds `testAll` task that executes tests under `src/test/*` and `src/integrationTest/*`.
+- Handles flags parameters to skip tests `skipTest`, `skipIntegrationTest`, `skipUnitTest`.
 - Makes integration classpath extend test classpath and main classpath (in this order).
-- Configures `idea` plugin to treat integration source dirs as test dirs (only when `idea` plugin is enabled or there is `.idea` folder in project root directory).
-- Exposes internal scope (from main and test module) to integration tests
-- Deobfuscates build gradle from boilerplate code
+- Makes sure IntelliJ idea treats `src/integrationTest/*` as test sources.
+- Exposes kotlin internal scope (from main and test module) to integration tests.
 
-## Enabling the plugin
+## Using the plugin
 
-Add to your `build.gradle`:
+Update `build.gradle.kts`
 
 ```gradle
 plugins {
   id "com.coditory.integration-test" version "1.5.1"
 }
+
+dependencies {
+  integrationTestImplementation(...)
+}
 ```
 
+Add integration tests under `src/integrationTest`. That's it!
+
+There are more details below but the rest is quite obvious as it suppose to be.
+
 ### Sample usages with different test frameworks
+
 See a [project](https://github.com/coditory/gradle-integration-test-plugin-sample) with all the examples.
 
 <details><summary>Java + JUnit4 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit4">project</a>)</summary>
@@ -40,6 +50,7 @@ dependencies {
     testCompile "junit:junit:4.12"
 }
 ```
+
 </p>
 </details>
 <details><summary>Java + JUnit5 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5">project</a>)</summary>
@@ -60,6 +71,7 @@ tasks.withType(Test) {
     useJUnitPlatform()
 }
 ```
+
 </p>
 </details>
 <details><summary>Groovy + Spock (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/groovy-spock">project</a>)</summary>
@@ -79,6 +91,7 @@ tasks.withType(Test) {
     useJUnitPlatform()
 }
 ```
+
 </p>
 </details>
 <details><summary>Kotlin + JUnit5 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5">project</a>)</summary>
@@ -99,6 +112,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 ```
+
 </p>
 </details>
 <details><summary>Kotlin + Kotest (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-kotest">project</a>)</summary>
@@ -120,26 +134,29 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 ```
+
 </p>
 </details>
 
 ## Usage
 
 Running tests:
+
 ```sh
 # Runs tests from /src/test
 ./gradlew test
 
-# Runs tests /src/integration
+# Runs tests /src/integrationTest
 ./gradlew integrationTest
 ./gradlew iT
 
-# Runs all tests (/src/test and /src/integration)
+# Runs all tests (/src/test and /src/integrationTest)
 ./gradlew testAll
 ./gradlew tA
 ```
 
 Skipping tests:
+
 ```sh
 # Skip all tests
 ./gradlew clean build -x test integrationTest
@@ -154,15 +171,17 @@ Skipping tests:
 # Skip tests from /src/integration
 ./gradlew clean build -x integrationTest
 # ...or skipIntegrationTests=true/false
-./gradlew clean build -PskipIntegrationTests
+./gradlew clean build -PskipIntegrationTest
 ```
 
 [Test filtering](https://docs.gradle.org/current/userguide/java_testing.html#test_filtering) is supported as well:
+
 ```sh
 ./gradlew iT --tests com.coditory.SampleTest.shouldWork
 ```
 
-Creating a single [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html) report for unit and integration tests:
+Creating a single [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html) report for unit and integration
+tests:
 
 ```gradle
 jacocoTestReport {
@@ -177,7 +196,14 @@ jacocoTestReport {
 ## The no-plugin alternative
 
 If you're against adding plugins to your build file, simply copy-paste the configuration from:
+
 - [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin/build.gradle)
 - [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin/build.gradle.kts)
 
 ...though it's not a one-liner, be aware of the obfuscation
+
+## Migrating from 1.x.x to 2.x.x
+
+- Integration test source folder changed from `src/integration` to `src/integrationTest`
+- Skipping flags changed from `skipTests`, `skipUnitTests`, `skipIntegrationTests`
+  to `skipTest`, `skipUnitTest`, `skipIntegrationTest`

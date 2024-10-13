@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration.acceptance
 
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -33,6 +35,8 @@ class Junit4BasedAcceptanceTest {
 
                 dependencies {
                     testImplementation "junit:junit:4.13.2"
+                    // sample integration test dependency
+                    integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
                 test {
@@ -74,7 +78,7 @@ class Junit4BasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/java/ConstantValues.java",
+                "src/integrationTest/java/ConstantValues.java",
                 """
                 public class ConstantValues {
                     public static final String MODULE = "integration";
@@ -95,7 +99,7 @@ class Junit4BasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integration/java/TestIntgSpec.java",
+                "src/integrationTest/java/TestIntgSpec.java",
                 """
                 $commonImports
 
@@ -158,12 +162,12 @@ class Junit4BasedAcceptanceTest {
             .withFile("src/main/resources/c.txt", "main-c")
             .withFile("src/test/resources/b.txt", "test-b")
             .withFile("src/test/resources/c.txt", "test-c")
-            .withFile("src/integration/resources/c.txt", "integration-c")
+            .withFile("src/integrationTest/resources/c.txt", "integration-c")
             .build()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
-    @ValueSource(strings = ["current", "7.3"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
         val result = runGradle(project, listOf("check"), gradleVersion)
