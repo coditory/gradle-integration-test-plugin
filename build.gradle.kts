@@ -1,10 +1,10 @@
 plugins {
     kotlin("jvm") version "2.0.20"
-    id("jacoco")
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "1.3.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
 
 repositories {
@@ -45,15 +45,8 @@ tasks.withType<Test> {
     }
 }
 
-tasks.jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
-}
-
-tasks.test {
-    finalizedBy(tasks.jacocoTestReport)
+tasks.register("coverage") {
+    dependsOn("koverXmlReport", "koverHtmlReport", "koverLog")
 }
 
 // Marking new version (incrementPatch [default], incrementMinor, incrementMajor)
@@ -71,5 +64,13 @@ gradlePlugin {
             description = "Gradle Plugin for integration tests"
             tags = listOf("test", "integration", "integration-test", "java-integration-test")
         }
+    }
+}
+
+// Prints project version.
+// Usage: ./gradlew version --quiet
+tasks.register("version") {
+    doLast {
+        println(project.version)
     }
 }

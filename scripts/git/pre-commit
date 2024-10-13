@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euf -o pipefail
+
+function run_ktlint {
+  if ! command -v ktlint &>/dev/null; then
+    echo -e "${RED}Please install Ktlint${ENDCOLOR} (https://pinterest.github.io/ktlint/latest/install/cli/#download-and-verification)"
+    exit 1
+  fi
+  # https://pinterest.github.io/ktlint/0.49.0/install/cli/#git-hooks
+  KT_FILES=$(git diff --name-only --cached --relative --diff-filter=ACMR -- '*.kt' '*.kts' | sed 's| |\\ |g')
+  if [ -n "$KT_FILES" ]; then
+    echo -e "${BLUE}Ktlint: linting $(echo "$KT_FILES" | wc -l) files${ENDCOLOR}"
+    start="$(date +%s)"
+    echo -n "$KT_FILES" | ktlint --relative --format --patterns-from-stdin
+    echo  -e  "${GREEN}Ktlint: finished in $(($(date +%s) - start))s${ENDCOLOR}"
+    echo "$KT_FILES" | xargs git add
+  fi
+}
+
+if [ "${NO_COLOR:-}" != "false" ]; then
+  RED="\e[31m"
+  GREEN="\e[32m"
+  BLUE="\e[34m"
+  ENDCOLOR="\e[0m"
+else
+  RED=""
+  GREEN=""
+  BLUE=""
+  ENDCOLOR=""
+fi
+
+prestart="$(date +%s)"
+echo -e "${BLUE}Pre-commit: Starting${ENDCOLOR}"
+
+if [ ./scripts/git/pre-commit -nt .git/hooks/pre-commit ]; then
+  cp -f ./scripts/git/pre-commit .git/hooks/pre-commit
+  echo -e "${RED}Updated git pre-commit hook. Please re-run commit.${ENDCOLOR}"
+  exit 1
+fi
+
+run_ktlint
+
+echo -e "${GREEN}Pre-commit: finished in $(($(date +%s) - prestart))s${ENDCOLOR}"

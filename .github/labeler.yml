@@ -1,29 +1,47 @@
-source:
-  - "src/**"
+backport:
+  - head-branch: ['^v[0-9]+\.x\.x']
+
+code:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/**"
 
 build:
-  - "**/*.gradle"
-  - "**/*.gradle.kts"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.gradle*"
 
 ci:
-  - ".github/**"
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
 
 documentation:
-  - "**/*.md"
-  - "docs/**"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
 
 license:
-  - "LICENSE"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "LICENSE"
 
 gradle:
-  - "gradlew"
-  - "gradlew.bat"
-  - ".gradle/**"
-  - "gradle/**"
+  - changed-files:
+      - any-glob-to-any-file:
+          - "gradlew*"
+          - ".gradle/**"
+          - "gradle/**"
+          - "setting.gradle*"
 
-git:
-  - ".gitignore"
+gitignore:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".gitignore"
 
-style:
-  - ".editorconfig"
-  - ".idea/codeStyles/**"
+codestyle:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".editorconfig"
+          - ".idea/codeStyles/**"

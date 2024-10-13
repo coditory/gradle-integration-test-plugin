@@ -4,8 +4,6 @@ on:
   pull_request:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
     branches-ignore:
       - 'dependabot/**'
       - 'gh-pages'
@@ -14,101 +12,57 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: |
-      (github.event_name != 'pull_request' && !github.event.pull_request.head.repo.fork)
-      || (github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || startsWith(github.head_ref, 'dependabot/')))
+    # Skip duplicate build on pull_request if pull request uses branch from the same repository
+    if: github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name
     steps:
+      - name: Skip build
+        id: skipper
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths_ignore: '["*.md", ".github/**.md", ".gitignore", "docs/**", "gradle.properties"]'
+          skip_summary: true
+
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Validate gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+        if: steps.skipper.outputs.should_skip != 'true'
+        with:
+          # Required to deduce version from git tags
+          fetch-depth: 0
 
       - name: Setup JDK
         uses: actions/setup-java@v4
+        if: steps.skipper.outputs.should_skip != 'true'
         with:
-          java-version: 17
-          cache: gradle
+          java-version: 21
           distribution: temurin
+
+      - name: Validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+        if: steps.skipper.outputs.should_skip != 'true'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        if: steps.skipper.outputs.should_skip != 'true'
+        with:
+          # Publish dependency graph only for the default branch
+          dependency-graph: |
+            ${{ (github.event.repository != null && github.ref_name == github.event.repository.default_branch)
+            && 'generate-and-submit' || 'disabled' }}
 
       - name: Build
         run: ./gradlew build
 
-      - name: Publish Test Report
-        if: success() || failure()  # run this step even if previous step failed
-        continue-on-error: true
-        uses: dorny/test-reporter@v1
-        with:
-          name: test report
-          path: ./**/build/test-results/test/*.xml
-          reporter: java-junit
-
       - name: Publish Coverage Report
         uses: codecov/codecov-action@v4
+        # Publish coverage only for the default branch
         if: |
-          github.repository == 'coditory/gradle-integration-test-plugin'
-          && github.ref == 'refs/heads/master'
+          steps.skipper.outputs.should_skip != 'true'
+          && github.event.repository != null
+          && github.ref_name == github.event.repository.default_branch
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           override_commit: ${{ github.event.workflow_run.head_sha }}
           override_branch: ${{ github.event.workflow_run.head_branch }}
           override_build: ${{ github.event.workflow_run.id }}
           disable_search: true
-          files: build/reports/jacoco/coverage/coverage.xml
-
-      - name: Import GPG Key
-        id: gpg
-        uses: crazy-max/ghaction-import-gpg@v6
-        if: |
-          github.repository == 'coditory/gradle-integration-test-plugin'
-          && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_committer_name: Coditory Bot
-          git_committer_email: bot@coditory.com
-
-      - name: Publish Release
-        id: publish-release
-        if: |
-          github.repository == 'coditory/gradle-integration-test-plugin'
-          && startsWith(github.ref, 'refs/tags/v')
-          && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        env:
-          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
-          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
-        run: |
-          ./gradlew publishPlugins \
-            -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
-            -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET \
-            -Pversion=$NEXT_VERSION
-
-      - name: Generate Release Notes
-        id: generate-release-notes
-        if: steps.publish-release.conclusion == 'success'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          declare -r NOTES="$(gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/releases/generate-notes \
-            -f target_commitish='master' \
-            -f tag_name=${GITHUB_REF_NAME:1} \
-            | jq -r '.body')"
-          declare -r ESCAPED="${NOTES//$'\n'/'%0A'}"
-          echo "notes=$ESCAPED" >> $GITHUB_OUTPUT
-
-      - name: Create github release
-        if: steps.generate-release-notes.conclusion == 'success'
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          body: ${{ steps.notes.outputs.notes }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          files: build/reports/kover/report.xml
