@@ -2,6 +2,7 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.createProject
+import com.coditory.gradle.integration.base.toBuildPath
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
@@ -10,7 +11,6 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import org.gradle.testing.base.TestingExtension
 import org.junit.jupiter.api.Test
-import java.io.File
 import org.gradle.api.tasks.testing.Test as TestTask
 
 class TestTaskConfigurationTest {
@@ -20,21 +20,19 @@ class TestTaskConfigurationTest {
     fun `should configure integration source sets`() {
         val sourceSet = getSourceSet()
         assertThat(sourceSet).isNotNull
-        assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(toBuildPath("classes/java/integrationTest"))
-        assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(toBuildPath("resources/integrationTest"))
-        // TODO: Fix it. Tried is all. It's failing with Could not find org.gradle.internal.impldep.org.junit.jupiter:junit-jupiter:5.8.2
+        assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(project.toBuildPath("classes/java/integrationTest"))
+        assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(project.toBuildPath("resources/integrationTest"))
+        // TODO: Fix it. Tried it all. It's failing with Could not find org.gradle.internal.impldep.org.junit.jupiter:junit-jupiter:5.8.2
         // Tried: adding repositories to test project, defining tests to use junit platform etc - did not help...
         // assertThat(sourceSet.runtimeClasspath.asPath)
         //     .isEqualTo(
-        //         toBuildPath(
-        //             listOf(
-        //                 "classes/java/integrationTest",
-        //                 "resources/integrationTest",
-        //                 "classes/java/test",
-        //                 "resources/test",
-        //                 "classes/java/main",
-        //                 "resources/main",
-        //             ),
+        //         project.toBuildPath(
+        //             "classes/java/integrationTest",
+        //             "resources/integrationTest",
+        //             "classes/java/test",
+        //             "resources/test",
+        //             "classes/java/main",
+        //             "resources/main",
         //         ),
         //     )
     }
@@ -61,16 +59,6 @@ class TestTaskConfigurationTest {
 
     private fun getTestTask(): TestTask {
         return project.tasks.getByName(INTEGRATION_TEST) as TestTask
-    }
-
-    private fun toBuildPath(path: String, project: Project = this.project): String {
-        return toBuildPath(listOf(path), project)
-    }
-
-    private fun toBuildPath(paths: List<String>, project: Project = this.project): String {
-        return paths.joinToString(File.pathSeparator) {
-            "${project.layout.buildDirectory.get()}${File.separator}${it.replace("/", File.separator)}"
-        }
     }
 
     @Suppress("UnstableApiUsage")

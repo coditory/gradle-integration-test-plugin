@@ -37,7 +37,7 @@ class CommandLineAcceptanceTest {
                     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                 }
 
-                test {
+                tasks.withType(Test) {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")
@@ -75,10 +75,6 @@ class CommandLineAcceptanceTest {
                 }
                 """,
             ).build()
-    }
-
-    companion object {
-        const val ABC = ""
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")

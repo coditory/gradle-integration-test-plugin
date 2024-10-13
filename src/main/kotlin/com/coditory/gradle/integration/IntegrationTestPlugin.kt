@@ -16,6 +16,7 @@ open class IntegrationTestPlugin : Plugin<Project> {
         }
         TestSuitesConfiguration.apply(project)
         TestAllTaskConfiguration.apply(project)
+        JacocoTaskConfiguration.apply(project)
     }
 
     companion object {

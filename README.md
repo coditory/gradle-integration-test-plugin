@@ -14,6 +14,8 @@
 - Makes integration classpath extend test classpath and main classpath (in this order).
 - Makes sure IntelliJ idea treats `src/integrationTest/*` as test sources.
 - Exposes kotlin internal scope (from main and test module) to integration tests.
+- Integrates with [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
+  and [Kover](https://github.com/Kotlin/kotlinx-kover).
 
 ## Using the plugin
 
@@ -161,12 +163,12 @@ Skipping tests:
 # Skip all tests
 ./gradlew clean build -x test integrationTest
 # ...or skipTests=true/false
-./gradlew clean build -PskipTests
+./gradlew clean build -PskipTest
 
 # Skip tests from /src/test
 ./gradlew clean build -x test
 # ...or skipUnitTests=true/false
-./gradlew clean build -PskipUnitTests
+./gradlew clean build -PskipUnitTest
 
 # Skip tests from /src/integration
 ./gradlew clean build -x integrationTest
@@ -180,19 +182,6 @@ Skipping tests:
 ./gradlew iT --tests com.coditory.SampleTest.shouldWork
 ```
 
-Creating a single [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html) report for unit and integration
-tests:
-
-```gradle
-jacocoTestReport {
-    executionData(fileTree(project.buildDir).include("jacoco/*.exec"))
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-}
-```
-
 ## The no-plugin alternative
 
 If you're against adding plugins to your build file, simply copy-paste the configuration from:
@@ -200,10 +189,12 @@ If you're against adding plugins to your build file, simply copy-paste the confi
 - [Java + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5-no-plugin/build.gradle)
 - [Kotlin + Junit5 (no plugin)](https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/kotlin-junit5-no-plugin/build.gradle.kts)
 
-...though it's not a one-liner, be aware of the obfuscation
+...though mind the boilerplate
 
 ## Migrating from 1.x.x to 2.x.x
 
 - Integration test source folder changed from `src/integration` to `src/integrationTest`
-- Skipping flags changed from `skipTests`, `skipUnitTests`, `skipIntegrationTests`
-  to `skipTest`, `skipUnitTest`, `skipIntegrationTest`
+- In `build.gradle` file in `dependencies {}` section use `integrationTestImplementation(...)` instead of
+  `integrationImplementation(...)`
+- Skipping flags changed names. Use `skipTests`, `skipUnitTests`, `skipIntegrationTests`
+  instead of `skipTest`, `skipUnitTest`, `skipIntegrationTest`

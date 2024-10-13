@@ -41,7 +41,7 @@ class LombokAcceptanceTest {
                     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                 }
 
-                test {
+                tasks.withType(Test) {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")
