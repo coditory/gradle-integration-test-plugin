@@ -39,22 +39,6 @@ There are more details below but the rest is quite obvious as it suppose to be.
 
 See a [project](https://github.com/coditory/gradle-integration-test-plugin-sample) with all the examples.
 
-<details><summary>Java + JUnit4 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit4">project</a>)</summary>
-<p>
-
-```gradle
-plugins {
-    id "java"
-    id "com.coditory.integration-test" version "2.0.0"
-}
-
-dependencies {
-    testCompile "junit:junit:4.12"
-}
-```
-
-</p>
-</details>
 <details><summary>Java + JUnit5 (<a href="https://github.com/coditory/gradle-integration-test-plugin-sample/tree/master/java-junit5">project</a>)</summary>
 <p>
 
@@ -193,8 +177,10 @@ If you're against adding plugins to your build file, simply copy-paste the confi
 
 ## Migrating from 1.x.x to 2.x.x
 
-- Integration test source folder changed from `src/integration` to `src/integrationTest`
-- In `build.gradle` file in `dependencies {}` section use `integrationTestImplementation(...)` instead of
-  `integrationImplementation(...)`
+- Rename integration test source folder from `src/integration` to `src/integrationTest`.
+- In `build.gradle[.kts]` file in `dependencies {}` section use `integrationTestImplementation(...)` instead of
+  `integrationImplementation(...)`.
 - Skipping flags changed names. Use `skipTests`, `skipUnitTests`, `skipIntegrationTests`
-  instead of `skipTest`, `skipUnitTest`, `skipIntegrationTest`
+  instead of `skipTest`, `skipUnitTest`, `skipIntegrationTest`.
+- Added integration with Jacoco - coverage from integration tests is automatically included in report.
+- Integration with JUnit4 is removed.
