@@ -123,7 +123,6 @@ jobs:
           echo "Changing: $PREV_VERSION -> $NEXT_VERSION"
           sed -i "s|${ESC_PREV_VERSION}|${NEXT_VERSION}|" README.md
           sed -i "s|^version=${ESC_PREV_VERSION}|version=${NEXT_VERSION}|" gradle.properties
-          sed -i "s|^\( *\)version: *${ESC_PREV_VERSION}|\1version: ${NEXT_VERSION}|" docs/mkdocs.yml
           if [ "$NEXT_VERSION" == "${NEXT_VERSION%%-SNAPSHOT}" ]; then
             if [ -n "$(git status --porcelain)" ]; then
               git add -A
