@@ -26,7 +26,7 @@ class SpockBasedAcceptanceTest {
                 dependencies {
                     testImplementation "org.spockframework:spock-core:2.4-M4-groovy-4.0"
                     // sample integration test dependency
-                    integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
+                    integrationImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
                 tasks.withType(Test) {
@@ -53,7 +53,7 @@ class SpockBasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/groovy/ConstantValues.groovy",
+                "src/integration/groovy/ConstantValues.groovy",
                 """
                 class ConstantValues {
                     static final String MODULE = "integration"
@@ -74,7 +74,7 @@ class SpockBasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/groovy/TestIntgSpec.groovy",
+                "src/integration/groovy/TestIntgSpec.groovy",
                 """
                 import spock.lang.Specification
                 import static ClasspathFileReader.readFile
@@ -134,7 +134,7 @@ class SpockBasedAcceptanceTest {
             .withFile("src/main/resources/c.txt", "main-c")
             .withFile("src/test/resources/b.txt", "test-b")
             .withFile("src/test/resources/c.txt", "test-c")
-            .withFile("src/integrationTest/resources/c.txt", "integration-c")
+            .withFile("src/integration/resources/c.txt", "integration-c")
             .build()
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")

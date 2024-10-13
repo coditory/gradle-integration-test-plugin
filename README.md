@@ -177,10 +177,7 @@ If you're against adding plugins to your build file, simply copy-paste the confi
 
 ## Migrating from 1.x.x to 2.x.x
 
-- Rename integration test source folder from `src/integration` to `src/integrationTest`.
-- In `build.gradle[.kts]` file in `dependencies {}` section use `integrationTestImplementation(...)` instead of
-  `integrationImplementation(...)`.
 - Skipping flags changed names. Use `skipTests`, `skipUnitTests`, `skipIntegrationTests`
   instead of `skipTest`, `skipUnitTest`, `skipIntegrationTest`.
 - Added integration with Jacoco - coverage from integration tests is automatically included in report.
-- Integration with JUnit4 is removed.
+- Integration with JUnit4 is dropped.

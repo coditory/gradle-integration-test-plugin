@@ -65,7 +65,7 @@ class JacocoBasedAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/java/TestIntgSpec.java",
+                "src/integration/java/TestIntgSpec.java",
                 """
                 $commonImports
 

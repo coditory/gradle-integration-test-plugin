@@ -1,5 +1,6 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.createProject
 import com.coditory.gradle.integration.base.toBuildPath
@@ -20,8 +21,8 @@ class TestTaskConfigurationTest {
     fun `should configure integration source sets`() {
         val sourceSet = getSourceSet()
         assertThat(sourceSet).isNotNull
-        assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(project.toBuildPath("classes/java/integrationTest"))
-        assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(project.toBuildPath("resources/integrationTest"))
+        assertThat(sourceSet.output.classesDirs.asPath).isEqualTo(project.toBuildPath("classes/java/integration"))
+        assertThat(sourceSet.output.resourcesDir.toString()).isEqualTo(project.toBuildPath("resources/integration"))
         // TODO: Fix it. Tried it all. It's failing with Could not find org.gradle.internal.impldep.org.junit.jupiter:junit-jupiter:5.8.2
         // Tried: adding repositories to test project, defining tests to use junit platform etc - did not help...
         // assertThat(sourceSet.runtimeClasspath.asPath)
@@ -42,7 +43,7 @@ class TestTaskConfigurationTest {
         val integrationSourceSet = getSourceSet()
         val task = getTestTask()
         assertThat(task.testClassesDirs).isNotNull
-        assertThat(task.description).isEqualTo("Runs the integration test suite.")
+        assertThat(task.description).isEqualTo("Runs the integration suite.")
         assertThat(task.group).isEqualTo(VERIFICATION_GROUP)
         assertThat(task.testClassesDirs).isEqualTo(integrationSourceSet.output.classesDirs)
         assertThat(task.classpath).isEqualTo(integrationSourceSet.runtimeClasspath)
@@ -58,13 +59,13 @@ class TestTaskConfigurationTest {
     }
 
     private fun getTestTask(): TestTask {
-        return project.tasks.getByName(INTEGRATION_TEST) as TestTask
+        return project.tasks.getByName(INTEGRATION) as TestTask
     }
 
     @Suppress("UnstableApiUsage")
     private fun getSourceSet(project: Project = this.project): SourceSet {
         return project.extensions.getByType(TestingExtension::class.java).suites
-            .getByName(INTEGRATION_TEST)
+            .getByName(INTEGRATION)
             .let { it as JvmTestSuite }
             .sources
     }

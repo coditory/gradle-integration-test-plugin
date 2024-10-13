@@ -37,7 +37,7 @@ class KotlinInternalScopeAcceptanceTest {
                     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
                     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
                     // sample integration test dependency
-                    integrationTestImplementation("org.slf4j:slf4j-api:2.0.16")
+                    integrationImplementation("org.slf4j:slf4j-api:2.0.16")
                 }
 
                 tasks.withType<Test> {
@@ -63,7 +63,7 @@ class KotlinInternalScopeAcceptanceTest {
                 }
                 """,
             ).withFile(
-                "src/integrationTest/kotlin/TestIntgSpec.kt",
+                "src/integration/kotlin/TestIntgSpec.kt",
                 """
                 $commonImports
 

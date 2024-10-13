@@ -1,5 +1,7 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_INTEGRATION_TEST_FLAG_NAME
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_TEST_ALL_FLAG_NAME
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.SKIP_UNIT_TEST_FLAG_NAME
@@ -28,7 +30,11 @@ internal object TestSkippingConditions {
     }
 
     private fun hasSkipIntegrationTestFlag(project: Project): Boolean {
-        return hasPropertyFlag(project, SKIP_INTEGRATION_TEST_FLAG_NAME)
+        return hasPropertyFlag(project, SKIP_INTEGRATION_TEST_FLAG_NAME) || hasExcludeIntegrationTestTaskParam(project)
+    }
+
+    private fun hasExcludeIntegrationTestTaskParam(project: Project): Boolean {
+        return hasExcludedTask(project, INTEGRATION_TEST) || hasExcludedTask(project, INTEGRATION)
     }
 
     private fun hasPropertyFlag(project: Project, name: String): Boolean {
@@ -37,5 +43,9 @@ internal object TestSkippingConditions {
             return value == null || !value.toString().equals("false", true)
         }
         return false
+    }
+
+    private fun hasExcludedTask(project: Project, name: String): Boolean {
+        return project.gradle.startParameter.excludedTaskNames.contains(name)
     }
 }

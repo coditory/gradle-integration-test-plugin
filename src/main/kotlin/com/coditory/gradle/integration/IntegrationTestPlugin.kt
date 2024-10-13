@@ -21,6 +21,7 @@ open class IntegrationTestPlugin : Plugin<Project> {
 
     companion object {
         const val PLUGIN_ID = "com.coditory.integration-test"
+        const val INTEGRATION = "integration"
         const val INTEGRATION_TEST = "integrationTest"
         const val TEST_ALL_TASK_NAME = "testAll"
         const val SKIP_UNIT_TEST_FLAG_NAME = "skipUnitTest"

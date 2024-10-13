@@ -1,5 +1,6 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.TEST_ALL_TASK_NAME
 import com.coditory.gradle.integration.TestSkippingConditions.skipTestAll
 import org.gradle.api.Project
@@ -15,5 +16,6 @@ internal object TestAllTaskConfiguration {
         project.tasks.withType(Test::class.java).forEach {
             testAllTask.dependsOn(it.name)
         }
+        testAllTask.dependsOn(INTEGRATION_TEST)
     }
 }
