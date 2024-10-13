@@ -50,6 +50,7 @@ jobs:
             && 'generate-and-submit' || 'disabled' }}
 
       - name: Build
+        if: steps.skipper.outputs.should_skip != 'true'
         run: ./gradlew build
 
       - name: Publish Coverage Report

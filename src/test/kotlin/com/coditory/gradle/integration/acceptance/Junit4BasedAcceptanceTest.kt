@@ -39,7 +39,7 @@ class Junit4BasedAcceptanceTest {
                     integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
-                test {
+                tasks.withType(Test) {
                     testLogging {
                         events("passed", "failed", "skipped")
                         setExceptionFormat("full")

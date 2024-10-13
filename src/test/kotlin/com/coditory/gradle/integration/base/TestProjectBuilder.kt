@@ -103,3 +103,13 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         }
     }
 }
+
+fun Project.toBuildPath(vararg paths: String): String {
+    return paths.joinToString(File.pathSeparator) {
+        "${this.layout.buildDirectory.get()}${File.separator}${it.replace("/", File.separator)}"
+    }
+}
+
+fun Project.readFileFromBuildDir(path: String): String? {
+    return this.layout.buildDirectory.file(path).get().asFile.readText()
+}

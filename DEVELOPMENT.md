@@ -14,10 +14,13 @@ cp scripts/git/pre-commit .git/hooks/pre-commit
 ```
 
 ## Commit messages
+
 Before writing a commit message read [this article](https://chris.beams.io/posts/git-commit/).
 
 ## Build
+
 Before pushing any changes make sure project builds without errors with:
+
 ```
 ./gradlew build
 ```
@@ -52,9 +55,8 @@ There are few ways for testing locally a gradle plugin:
 
 - Publish plugin to your local maven repository (`$HOME/.m2`) with:
   ```sh
-  ./gradlew publishToMavenLocal
+  ./gradlew publishToMavenLocal -Pversion="<SOME_VERSION>" && ls -la ~/.m2/repository/com/coditory/gradle/integration-test-plugin
   ```
-  It will publish the plugin with `unspecified` version.
 - Add section to `settings.gradle.kts`:
   ```kt
   // Instruct a sample project to use maven local to find the plugin
@@ -68,20 +70,18 @@ There are few ways for testing locally a gradle plugin:
 - Add dependency:
   ```kt
   plugins {
-    id("com.coditory.integration-test") version "unspecified"
+    id("com.coditory.integration-test") version "<SOME_VERSION>"
   }
   ```
-- You can skip last two steps and just use https://github.com/coditory/gradle-integration-test-plugin-sample and change
-  plugin version to `unspecified`.
 
 **Import plugin jar**
 Add plugin jar to the sample project (that uses the tested plugin):
 
 ```kt
 buildscript {
-  dependencies {
-    classpath(files("<PLUGIN_PROJECT_PATH>/build/libs/integration-test-plugin.jar"))
-  }
+    dependencies {
+        classpath(files("<PLUGIN_PROJECT_PATH>/build/libs/integration-test-plugin.jar"))
+    }
 }
 
 apply(plugin = "com.coditory.build")
