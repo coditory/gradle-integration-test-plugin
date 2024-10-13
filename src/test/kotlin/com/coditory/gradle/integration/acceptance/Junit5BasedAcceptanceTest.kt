@@ -36,7 +36,7 @@ class Junit5BasedAcceptanceTest {
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
                     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                     // sample integration test dependency
-                    integrationTestImplementation "com.coditory.quark:quark-context:0.1.22"
+                    integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
                 test {

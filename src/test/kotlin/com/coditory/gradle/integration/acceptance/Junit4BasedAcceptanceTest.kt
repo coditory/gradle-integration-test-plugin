@@ -36,7 +36,7 @@ class Junit4BasedAcceptanceTest {
                 dependencies {
                     testImplementation "junit:junit:4.13.2"
                     // sample integration test dependency
-                    integrationTestImplementation "com.coditory.quark:quark-context:0.1.22"
+                    integrationTestImplementation "org.slf4j:slf4j-api:2.0.16"
                 }
 
                 test {
