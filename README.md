@@ -9,10 +9,10 @@
 **Zero configuration**, **single responsibility** gradle plugin for integration tests.
 
 - Adds `integrationTest` task that executes tests under `src/integration/*`.
-- Adds `testAll` task that executes tests under `src/test/*` and `src/integrationTest/*`.
+- Adds `testAll` task that executes tests under `src/test/*` and `src/integration/*`.
 - Handles flags parameters to skip tests `skipTest`, `skipIntegrationTest`, `skipUnitTest`.
 - Makes integration classpath extend test classpath and main classpath (in this order).
-- Makes sure IntelliJ idea treats `src/integrationTest/*` as test sources.
+- Makes sure IntelliJ idea treats `src/integration/*` as test sources.
 - Exposes kotlin internal scope (from main and test module) to integration tests.
 - Integrates with [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
   and [Kover](https://github.com/Kotlin/kotlinx-kover).
@@ -27,11 +27,11 @@ plugins {
 }
 
 dependencies {
-  integrationTestImplementation(...)
+  integrationImplementation(...)
 }
 ```
 
-Add integration tests under `src/integrationTest`. That's it!
+Add integration tests under `src/integration`. That's it!
 
 There are more details below but the rest is quite obvious as it suppose to be.
 
@@ -132,11 +132,11 @@ Running tests:
 # Runs tests from /src/test
 ./gradlew test
 
-# Runs tests /src/integrationTest
+# Runs tests /src/integration
 ./gradlew integrationTest
 ./gradlew iT
 
-# Runs all tests (/src/test and /src/integrationTest)
+# Runs all tests (/src/test and /src/integration)
 ./gradlew testAll
 ./gradlew tA
 ```
