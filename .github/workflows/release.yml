@@ -208,8 +208,9 @@ jobs:
             -f tag_name="v$NEXT_VERSION" \
             -f previous_tag_name="$PREV_TAG_NAME" \
             | jq -r '.body')"
-          declare -r ESCAPED="${NOTES//$'\n'/'%0A'}"
-          echo "notes=$ESCAPED" >> $GITHUB_OUTPUT
+          echo 'notes<<EOF' >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
       - name: Create github release
         if: steps.notes.conclusion == 'success'
