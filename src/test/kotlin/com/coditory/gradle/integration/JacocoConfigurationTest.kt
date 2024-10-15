@@ -1,16 +1,15 @@
 package com.coditory.gradle.integration
 
+import com.coditory.gradle.integration.base.TestProject
 import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
-import com.coditory.gradle.integration.base.toBuildPath
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.jupiter.api.Test
 
 class JacocoConfigurationTest {
-    private val project: Project = project()
+    private val project: TestProject = project()
         .withPlugins(JavaPlugin::class, JacocoPlugin::class, IntegrationTestPlugin::class)
         .build()
 

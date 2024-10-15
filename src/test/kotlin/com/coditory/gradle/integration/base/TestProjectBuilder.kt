@@ -2,7 +2,6 @@ package com.coditory.gradle.integration.base
 
 import com.coditory.gradle.integration.IntegrationTestPlugin
 import org.gradle.api.Plugin
-import org.gradle.api.Project
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
@@ -39,7 +38,7 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
-    fun withKtsBuildGradle(content: String): TestProjectBuilder {
+    fun withBuildGradleKts(content: String): TestProjectBuilder {
         val buildFile = project.rootDir.resolve("build.gradle.kts")
         buildFile.writeText(content.trimIndent().trim())
         return this
@@ -65,15 +64,13 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
-    fun build(): Project {
+    fun build(): TestProject {
         project.evaluate()
-        return project
+        return TestProject(project)
     }
 
     companion object {
-        private var projectDirs = mutableListOf<File>()
-
-        fun createProject(): Project {
+        fun createProject(): TestProject {
             return projectWithPlugins().build()
         }
 
@@ -88,28 +85,10 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
 
         @Suppress("EXPERIMENTAL_API_USAGE_ERROR")
         private fun createProjectDir(directory: String): File {
-            removeProjectDirs()
             val projectParentDir = createTempDirectory().toFile()
             val projectDir = projectParentDir.resolve(directory)
             projectDir.mkdir()
-            projectDirs.add(projectParentDir)
             return projectDir
         }
-
-        private fun removeProjectDirs() {
-            projectDirs.forEach {
-                it.deleteRecursively()
-            }
-        }
     }
-}
-
-fun Project.toBuildPath(vararg paths: String): String {
-    return paths.joinToString(File.pathSeparator) {
-        "${this.layout.buildDirectory.get()}${File.separator}${it.replace("/", File.separator)}"
-    }
-}
-
-fun Project.readFileFromBuildDir(path: String): String? {
-    return this.layout.buildDirectory.file(path).get().asFile.readText()
 }
