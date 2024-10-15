@@ -1,27 +1,19 @@
-package com.coditory.gradle.integration.acceptance
+package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
-import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
-import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
+import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class LombokAcceptanceTest {
-    private val project = createProject()
-
-    private fun createProject(): Project {
-        val commonImports =
-            """
-            import org.junit.jupiter.api.Test;
-
-            import static org.junit.jupiter.api.Assertions.assertEquals;
-            import static org.junit.jupiter.api.Assertions.assertNotEquals;
-            """.trimIndent()
-        return project("sample-lombok-project")
+class LombokTest {
+    companion object {
+        @AutoClose
+        private val project = TestProjectBuilder
+            .project("project-" + LombokTest::class.simpleName)
             .withBuildGradle(
                 """
                 plugins {
@@ -33,12 +25,12 @@ class LombokAcceptanceTest {
                 }
 
                 dependencies {
-                    compileOnly "org.projectlombok:lombok:1.18.34"
-                    annotationProcessor "org.projectlombok:lombok:1.18.34"
-                    testCompileOnly "org.projectlombok:lombok:1.18.34"
-                    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
+                    compileOnly "org.projectlombok:lombok:${Versions.lombok}"
+                    annotationProcessor "org.projectlombok:lombok:${Versions.lombok}"
+                    testCompileOnly "org.projectlombok:lombok:${Versions.lombok}"
+                    testAnnotationProcessor "org.projectlombok:lombok:${Versions.lombok}"
+                    testImplementation "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
+                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
                 }
 
                 tasks.withType(Test) {
@@ -82,7 +74,10 @@ class LombokAcceptanceTest {
             ).withFile(
                 "src/integration/java/TestIntgSpec.java",
                 """
-                $commonImports
+                import org.junit.jupiter.api.Test;
+
+                import static org.junit.jupiter.api.Assertions.assertEquals;
+                import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
                 public class TestIntgSpec {
                     @Test
@@ -107,7 +102,10 @@ class LombokAcceptanceTest {
             ).withFile(
                 "src/test/java/TestUnitSpec.java",
                 """
-                $commonImports
+                import org.junit.jupiter.api.Test;
+
+                import static org.junit.jupiter.api.Assertions.assertEquals;
+                import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
                 public class TestUnitSpec {
                     @Test
@@ -123,14 +121,15 @@ class LombokAcceptanceTest {
                     }
                 }
                 """,
-            ).build()
+            )
+            .build()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")
     @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests with lombok`(gradleVersion: String?) {
         // when
-        val result = runGradle(project, listOf("check"), gradleVersion)
+        val result = project.runGradle(listOf("check"), gradleVersion)
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)

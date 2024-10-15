@@ -1,31 +1,23 @@
-package com.coditory.gradle.integration.acceptance
+package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
-import com.coditory.gradle.integration.base.TestProjectBuilder.Companion.project
-import com.coditory.gradle.integration.base.TestProjectRunner.runGradle
+import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class KotlinInternalScopeAcceptanceTest {
-    private val project = createProject()
-
-    private fun createProject(): Project {
-        val commonImports =
-            """
-            import org.junit.jupiter.api.Test
-            import org.junit.jupiter.api.Assertions.assertEquals
-            import InternalObject
-            import PublicObject
-            """.trimIndent()
-        return project("sample-project")
-            .withKtsBuildGradle(
+class KotlinInternalScopeTest {
+    companion object {
+        @AutoClose
+        private val project = TestProjectBuilder
+            .project("project-${KotlinInternalScopeTest::class.simpleName}")
+            .withBuildGradleKts(
                 """
                 plugins {
-                    kotlin("jvm") version "2.0.20"
+                    kotlin("jvm") version "${Versions.kotlin}"
                     id("com.coditory.integration-test")
                 }
 
@@ -34,10 +26,8 @@ class KotlinInternalScopeAcceptanceTest {
                 }
 
                 dependencies {
-                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
-                    // sample integration test dependency
-                    integrationImplementation("org.slf4j:slf4j-api:2.0.16")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                 }
 
                 tasks.withType<Test> {
@@ -65,7 +55,10 @@ class KotlinInternalScopeAcceptanceTest {
             ).withFile(
                 "src/integration/kotlin/TestIntgSpec.kt",
                 """
-                $commonImports
+                import org.junit.jupiter.api.Test
+                import org.junit.jupiter.api.Assertions.assertEquals
+                import InternalObject
+                import PublicObject
 
                 class TestIntgSpec {
                     @Test
@@ -82,7 +75,10 @@ class KotlinInternalScopeAcceptanceTest {
             ).withFile(
                 "src/test/kotlin/TestUnitSpec.kt",
                 """
-                $commonImports
+                import org.junit.jupiter.api.Test
+                import org.junit.jupiter.api.Assertions.assertEquals
+                import InternalObject
+                import PublicObject
 
                 class TestUnitSpec {
                     @Test
@@ -96,14 +92,15 @@ class KotlinInternalScopeAcceptanceTest {
                     }
                 }
                 """,
-            ).build()
+            )
+            .build()
     }
 
-    @ParameterizedTest(name = "should make internal scope visible in integration tests {0}")
+    @ParameterizedTest(name = "should make internal scope visible in integration tests for gradle {0}")
     @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should run unit tests and integration tests on check command`(gradleVersion: String?) {
         // when
-        val result = runGradle(project, listOf("check"), gradleVersion)
+        val result = project.runGradle(listOf("check"), gradleVersion)
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
