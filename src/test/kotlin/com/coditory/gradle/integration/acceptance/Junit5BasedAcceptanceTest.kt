@@ -19,6 +19,7 @@ class Junit5BasedAcceptanceTest {
             import org.junit.jupiter.api.Test;
 
             import static org.junit.jupiter.api.Assertions.assertEquals;
+            import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
             import static base.ClasspathFileReader.readFile;
             """.trimIndent()
         return project("sample-project")
@@ -33,10 +34,12 @@ class Junit5BasedAcceptanceTest {
                 }
 
                 dependencies {
+                    implementation platform("org.springframework.boot:spring-boot-dependencies:3.3.3")
                     testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
                     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
                     // sample integration test dependency
                     integrationImplementation "org.slf4j:slf4j-api:2.0.16"
+                    integrationImplementation "org.springframework.boot:spring-boot-starter-test"
                 }
 
                 tasks.withType(Test) {
@@ -116,7 +119,7 @@ class Junit5BasedAcceptanceTest {
                     }
 
                     @Test
-                    public void shouldReadCTxtFileFromTest() {
+                    public void shouldReadCTxtFileFromIntegration() {
                         assertEquals("integration-c", readFile("c.txt"));
                     }
 
@@ -128,6 +131,13 @@ class Junit5BasedAcceptanceTest {
                     @Test
                     public void shouldReadConstantValueFromMainModule() {
                         assertEquals("main", MainConstantValues.MODULE);
+                    }
+
+                    @Test
+                    void shouldResolveDependencyFromBom() {
+                        assertDoesNotThrow(
+                            () -> Class.forName("org.springframework.test.context.ContextConfiguration")
+                        );
                     }
                 }
                 """,

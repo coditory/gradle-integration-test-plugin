@@ -40,22 +40,35 @@ internal object TestSuitesConfiguration {
                 task.onlyIf { !skipUnitTest(project) }
             }
         }
-        testing.suites.register(INTEGRATION, JvmTestSuite::class.java) {
-            it.testType.set(TestSuiteType.INTEGRATION_TEST)
-            it.targets.all { target ->
+        testing.suites.register(INTEGRATION, JvmTestSuite::class.java) { testSuite ->
+            testSuite.testType.set(TestSuiteType.INTEGRATION_TEST)
+            testSuite.targets.all { target ->
                 target.testTask.configure { task ->
                     task.shouldRunAfter(test)
                     task.onlyIf { !skipIntegrationTest(project) }
                 }
             }
-            val sourceSets = project.extensions.getByType(JavaPluginExtension::class.java)
-                .sourceSets
-            val mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-            val testSourceSet = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            it.sources.annotationProcessorPath += testSourceSet.annotationProcessorPath + mainSourceSet.annotationProcessorPath
-            it.sources.compileClasspath += testSourceSet.output + mainSourceSet.output + testSourceSet.compileClasspath
-            it.sources.runtimeClasspath += testSourceSet.output + mainSourceSet.output + testSourceSet.runtimeClasspath
+            setupIntegrationSourceSet(project, testSuite)
         }
+    }
+
+    private fun setupIntegrationSourceSet(project: Project, testSuite: JvmTestSuite) {
+        val sourceSets = project.extensions.getByType(JavaPluginExtension::class.java).sourceSets
+        val mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        val testSourceSet = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+        val integrationSourceSet = testSuite.sources
+
+        project.configurations.getByName(integrationSourceSet.compileClasspathConfigurationName)
+            .extendsFrom(project.configurations.getByName(testSourceSet.compileClasspathConfigurationName))
+
+        project.configurations.getByName(integrationSourceSet.runtimeOnlyConfigurationName)
+            .extendsFrom(project.configurations.getByName(testSourceSet.runtimeClasspathConfigurationName))
+
+        project.configurations.getByName(integrationSourceSet.annotationProcessorConfigurationName)
+            .extendsFrom(project.configurations.getByName(testSourceSet.annotationProcessorConfigurationName))
+
+        integrationSourceSet.compileClasspath += testSourceSet.output + mainSourceSet.output
+        integrationSourceSet.runtimeClasspath += testSourceSet.output + mainSourceSet.output
     }
 
     private fun setupTestTask(project: Project) {
