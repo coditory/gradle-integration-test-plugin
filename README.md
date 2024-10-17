@@ -14,8 +14,10 @@
 - Makes integration classpath extend test classpath and main classpath (in this order).
 - Makes sure IntelliJ idea treats `src/integration/*` as test sources.
 - Exposes kotlin internal scope (from main and test module) to integration tests.
-- Integrates with [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
+- Integrates with test coverage tools like [Jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
   and [Kover](https://github.com/Kotlin/kotlinx-kover).
+- Integrates with test frameworks like [JUnit5](https://junit.org/junit5/), [Spock](https://spockframework.org/) and
+  [Kotest](https://kotest.io/).
 
 ## Using the plugin
 
