@@ -70,7 +70,7 @@ jobs:
             echo "Commit did not pass Build. Stopping release!"
             exit 1
           fi
-          echo "Last commit passed build."
+          echo "Last commit passed Build."
           exit 0
 
       - name: Get versions
