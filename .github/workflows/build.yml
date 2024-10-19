@@ -23,48 +23,16 @@ jobs:
 
       - name: Skip build if not needed
         id: skipper
+        uses: coditory/skip-action@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          declare -r PREV_SHA="$(git rev-parse HEAD~1 2>/dev/null || true)"
-          if [ "$PREV_SHA" == "HEAD~1" ]; then
-            echo "It's an initial commit."
-            echo "skip=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          declare -r RUNS="$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/actions/runs?head_sha=$PREV_SHA)"
-          declare -r BUILD_SUCCESS="$(echo "$RUNS" | jq -r 'limit(1; .workflow_runs[] | select(.name == "Build" and (.conclusion == "success" or .conclusion == "skipped"))) | .conclusion')"
-          if [ -z "$BUILD_SUCCESS"  ]; then
-            echo "Last commit did not pass Build"
-            echo "skip=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          echo "Last commit passed Build"
-          case '${{ github.event_name }}' in
-            push)
-              SHAS=(${{ join(github.event.commits.*.id, ' ') || 'none' }})
-              CHANGED_FILES="$(git diff --name-only --diff-filter=d "${SHAS[0]}~1" "${SHAS[-1]}")"
-              ;;
-            pull_request)
-              CHANGED_FILES="$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})"
-              ;;
-            *)
-              echo "Event ${{ github.event_name }} should not be skipped."
-              echo "skip=false" >> $GITHUB_OUTPUT
-              exit 0
-          esac
-          NOT_SKIPPED="$(echo "$CHANGED_FILES" \
-            | grep -v -e "^[^/]*\.md" -e "^.github/.*\.md" -e "^.gitignore" -e "^docs/.*" -e "^gradle.properties" || true)"
-          if [ -z "$NOT_SKIPPED" ]; then
-            echo "No important files detected. Skipping Build."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo -e "Important files detected:\n$(echo $NOT_SKIPPED | head -n 10)"
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-          echo -e "Changed files:\n$CHANGED_FILES"
+        with:
+          skip-files: |-
+            ^.gitignore
+            ^[^/]*\.md
+            ^.github/.*\.md
+            ^docs/.*
+            ^gradle.properties
 
       - name: Setup JDK
         uses: actions/setup-java@v4
