@@ -25,7 +25,7 @@ Update `build.gradle.kts`
 
 ```gradle
 plugins {
-  id "com.coditory.integration-test" version "2.0.2"
+  id("com.coditory.integration-test") version "2.0.2"
 }
 
 dependencies {
@@ -45,17 +45,18 @@ See a [project](https://github.com/coditory/gradle-integration-test-plugin-sampl
 <p>
 
 ```gradle
+// build.gradle.kts
 plugins {
-    id "java"
-    id "com.coditory.integration-test" version "2.0.2"
+    id("java")
+    id("com.coditory.integration-test") version "2.0.2"
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.11.0")
 }
 
-tasks.withType(Test) {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 ```
@@ -66,13 +67,14 @@ tasks.withType(Test) {
 <p>
 
 ```gradle
+// build.gradle
 plugins {
     id "groovy"
     id "com.coditory.integration-test" version "2.0.2"
 }
 
 dependencies {
-    testCompile "org.spockframework:spock-core:2.0-groovy-3.0"
+    testCompile "org.spockframework:spock-core:2.4-M4-groovy-4.0"
 }
 
 tasks.withType(Test) {
@@ -86,8 +88,9 @@ tasks.withType(Test) {
 <p>
 
 ```gradle
+// build.gradle.kts
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "2.0.20"
     id("com.coditory.integration-test") version "2.0.2"
 }
 
@@ -107,15 +110,16 @@ tasks.withType<Test> {
 <p>
 
 ```gradle
+// build.gradle.kts
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "2.0.20"
     id("com.coditory.integration-test") version "2.0.2"
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
-    testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 }
 
 tasks.withType<Test> {
