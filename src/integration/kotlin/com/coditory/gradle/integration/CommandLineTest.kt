@@ -27,10 +27,10 @@ class CommandLineTest {
             ).joinToString("-")
             return TestProjectBuilder
                 .project(name)
-                .withBuildGradle(
+                .withBuildGradleKts(
                     """
                     plugins {
-                        id 'com.coditory.integration-test'
+                        id("com.coditory.integration-test")
                     }
 
                     repositories {
@@ -38,11 +38,11 @@ class CommandLineTest {
                     }
 
                     dependencies {
-                        testImplementation "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
-                        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
+                        testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+                        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                     }
 
-                    tasks.withType(Test) {
+                    tasks.withType<Test> {
                         useJUnitPlatform()
                         testLogging {
                             events("passed", "failed", "skipped")

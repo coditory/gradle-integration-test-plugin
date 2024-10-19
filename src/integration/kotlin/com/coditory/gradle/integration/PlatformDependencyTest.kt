@@ -14,10 +14,10 @@ class PlatformDependencyTest {
         @AutoClose
         private val project = TestProjectBuilder
             .project("project-${PlatformDependencyTest::class.simpleName}")
-            .withBuildGradle(
+            .withBuildGradleKts(
                 """
                 plugins {
-                    id 'com.coditory.integration-test'
+                    id("com.coditory.integration-test")
                 }
 
                 repositories {
@@ -25,13 +25,13 @@ class PlatformDependencyTest {
                 }
 
                 dependencies {
-                    implementation platform("org.springframework.boot:spring-boot-dependencies:${Versions.spring}")
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
-                    integrationImplementation "org.springframework.boot:spring-boot-starter-test"
+                    implementation(platform("org.springframework.boot:spring-boot-dependencies:${Versions.spring}"))
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
+                    integrationImplementation("org.springframework.boot:spring-boot-starter-test")
                 }
 
-                tasks.withType(Test) {
+                tasks.withType<Test> {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")

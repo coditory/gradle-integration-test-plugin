@@ -14,10 +14,10 @@ class LombokTest {
         @AutoClose
         private val project = TestProjectBuilder
             .project("project-" + LombokTest::class.simpleName)
-            .withBuildGradle(
+            .withBuildGradleKts(
                 """
                 plugins {
-                    id 'com.coditory.integration-test'
+                    id("com.coditory.integration-test")
                 }
 
                 repositories {
@@ -25,15 +25,15 @@ class LombokTest {
                 }
 
                 dependencies {
-                    compileOnly "org.projectlombok:lombok:${Versions.lombok}"
-                    annotationProcessor "org.projectlombok:lombok:${Versions.lombok}"
-                    testCompileOnly "org.projectlombok:lombok:${Versions.lombok}"
-                    testAnnotationProcessor "org.projectlombok:lombok:${Versions.lombok}"
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
+                    compileOnly("org.projectlombok:lombok:${Versions.lombok}")
+                    annotationProcessor("org.projectlombok:lombok:${Versions.lombok}")
+                    testCompileOnly("org.projectlombok:lombok:${Versions.lombok}")
+                    testAnnotationProcessor("org.projectlombok:lombok:${Versions.lombok}")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                 }
 
-                tasks.withType(Test) {
+                tasks.withType<Test> {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")

@@ -14,11 +14,11 @@ class JacocoBasedTest {
         @AutoClose
         private val project = TestProjectBuilder
             .project("project-" + JacocoBasedTest::class.simpleName)
-            .withBuildGradle(
+            .withBuildGradleKts(
                 """
                 plugins {
-                    id 'jacoco'
-                    id 'com.coditory.integration-test'
+                    id("jacoco")
+                    id("com.coditory.integration-test")
                 }
 
                 repositories {
@@ -26,11 +26,11 @@ class JacocoBasedTest {
                 }
 
                 dependencies {
-                    testImplementation "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
-                    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                 }
 
-                tasks.withType(Test) {
+                tasks.withType<Test> {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")
@@ -38,9 +38,9 @@ class JacocoBasedTest {
                     }
                 }
 
-                jacocoTestReport {
+                tasks.jacocoTestReport {
                     reports {
-                        xml.required = true
+                        xml.required.set(true)
                     }
                 }
                 """,
