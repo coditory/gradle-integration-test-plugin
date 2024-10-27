@@ -44,7 +44,7 @@ jobs:
       branch: ${{ inputs.branch }}
       section: ${{ inputs.section }}
       version: ${{ inputs.version }}
-      java-version: 21
+      java-version: 17
       release-command: |
         ./gradlew publishPlugins \
             -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
