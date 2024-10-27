@@ -28,6 +28,15 @@ updates:
       # merged automatically
       dev-dependencies:
         patterns:
+          # gradle plugins
+          - "*ktlint-gradle"
+          - "*dokka-gradle-plugin"
+          - "*kover-gradle-plugin"
+          - "*publish-plugin"
+          - "*maven-plugin"
+          - "*java-gradle-plugin"
+          - "*gradle-integration-test-plugin"
+          # test dependencies
           - "org.assertj*"
           - "org.junit*"
       # merged and released automatically
