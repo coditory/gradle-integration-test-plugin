@@ -4,37 +4,5 @@ on: pull_request_target
 
 jobs:
   dependabot:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    permissions:
-      pull-requests: write
-      contents: write
-    steps:
-      - name: Setup bot token
-        uses: actions/create-github-app-token@v1
-        id: bot
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
-
-      - name: Dependabot metadata
-        id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --rebase "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ steps.bot.outputs.token }}
-
-      - name: Approve patch and minor updates
-        if: steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ steps.bot.outputs.token }}
-          DEPENDENCY: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          PREV_VERSION: ${{ steps.dependabot-metadata.outputs.previous-version }}
-          NEW_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
-        run: echo -e "Pull request is **auto approved** because **it includes a non-major update**\n$DEPENDENCY $PREV_VERSION -> $NEW_VERSION" | gh pr review $PR_URL --approve --body-file -
+    uses: coditory/workflows/.github/workflows/dependabot.yml@v1
+    secrets: inherit

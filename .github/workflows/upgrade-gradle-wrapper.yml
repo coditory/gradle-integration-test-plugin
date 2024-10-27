@@ -1,0 +1,12 @@
+name: Upgrade Gradle Wrapper
+
+on:
+  workflow_dispatch:
+  schedule:
+    # at 5:30 UTC every month
+    - cron: "30 5 1 * *"
+
+jobs:
+  upgrade-gradle-wrapper:
+    uses: coditory/jvm-workflows/.github/workflows/upgrade-gradle-wrapper.yml@v1
+    secrets: inherit

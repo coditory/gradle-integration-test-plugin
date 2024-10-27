@@ -1,14 +1,8 @@
 name: "Labeler"
 
-on: [pull_request_target]
+on: pull_request_target
 
 jobs:
-  label-pr:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/labeler@v5
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  labeler:
+    uses: coditory/workflows/.github/workflows/labeler.yml@v1
+    secrets: inherit

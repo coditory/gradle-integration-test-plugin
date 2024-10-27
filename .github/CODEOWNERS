@@ -1,1 +1,9 @@
 * @coditory/reviewers
+
+# Exclusions so changes made by dependabot and other bots could be auto reviewed by Coditory App.
+# Currently App cannot be a part of a team or CODEOWNERS file.
+# https://github.com/orgs/community/discussions/23064
+.github/workflows/*
+gradle/**
+**/build.gradle.kts
+**/settings.gradle.kts

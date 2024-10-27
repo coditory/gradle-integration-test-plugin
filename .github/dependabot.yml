@@ -1,11 +1,42 @@
 version: 2
 updates:
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    groups:
+      # merged and released instantly
+      sec-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      # merged automatically
+      dev-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      # merged and released instantly
+      sec-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      # merged automatically
+      dev-dependencies:
+        patterns:
+          - "io.kotest*"
+          - "*-test"
+          - "*assert"
+      # merged and released automatically
+      prod-dependencies:
+        update-types:
+          - "patch"
+          - "minor"
+      # requires human approval and has higher chance to fail build
+      prod-dependencies-major:
+        update-types:
+          - "major"

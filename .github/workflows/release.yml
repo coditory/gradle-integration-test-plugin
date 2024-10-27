@@ -19,174 +19,34 @@ on:
         default: patch
       version:
         type: string
-        description: |
-          ...or manually define version like 1.2.3, 1.2.3-suffix
+        description: ...or manually define version like 1.2.3, 1.2.3-suffix
+        required: false
+  # Called from release-auto
+  workflow_call:
+    inputs:
+      branch:
+        type: string
+        required: false
+        default: main
+      section:
+        type: string
+        required: false
+        default: patch
+      version:
+        type: string
         required: false
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup bot token
-        uses: actions/create-github-app-token@v1
-        id: bot
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
-
-      - name: Configure bot git account
-        id: get-user-id
-        env:
-          GH_TOKEN: ${{ steps.bot.outputs.token }}
-        run: |
-          USER_ID="$(gh api "/users/${{ steps.bot.outputs.app-slug }}[bot]" --jq .id)"
-          USER_EMAIL="$USER_ID+${{ steps.bot.outputs.app-slug }}[bot]@users.noreply.github.com"
-          USER_NAME="${{ steps.bot.outputs.app-slug }}[bot]"
-          git config --global user.name "$USER_NAME"
-          git config --global user.email "$USER_EMAIL"
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: "refs/heads/${{ inputs.branch }}"
-          token: ${{ steps.bot.outputs.token }}
-          # Required to deduce version from git tags
-          fetch-depth: 0
-
-      - name: Validate build succeeded
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BUILD_WORKFLOW: Build
-        run: |
-          if git tag --points-at HEAD | grep -Eq "^v[0-9]+.[0-9]+.[0-9]+$"; then
-            echo "Last commit is a release commit."
-            exit 0
-          fi
-          declare -r SHA="$(git rev-parse HEAD)"
-          declare -r RUNS="$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA)"
-          declare -r BUILD_SUCCESS="$(echo "$RUNS" | jq -r "limit(1; .workflow_runs[] | select(.name == \"$BUILD_WORKFLOW\" and .conclusion == \"success\")) | .conclusion")"
-          if [ -z "$BUILD_SUCCESS"  ]; then
-            echo "Commit did not pass $BUILD_WORKFLOW. Stopping release!"
-            exit 1
-          fi
-          echo "Last commit passed $BUILD_WORKFLOW."
-          exit 0
-
-      - name: Version
-        id: version
-        uses: coditory/version-action@v1
-        with:
-          snapshot: ${{ inputs.snapshot }}
-          manual-version: ${{ inputs.version }}
-          increment-section: ${{ inputs.section }}
-
-      - name: Update version in files
-        id: commit
-        env:
-          PREV_VERSION: ${{ steps.version.outputs.version }}
-          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
-        run: |
-          declare -r ESC_PREV_VERSION="${PREV_VERSION//./\\.}"
-          echo "Changing: $PREV_VERSION -> $NEXT_VERSION"
-          sed -i "s|${ESC_PREV_VERSION}|${NEXT_VERSION}|" README.md
-          sed -i "s|^version=${ESC_PREV_VERSION}|version=${NEXT_VERSION}|" gradle.properties
-          if [ "$NEXT_VERSION" == "${NEXT_VERSION%%-SNAPSHOT}" ]; then
-            if [ -n "$(git status --porcelain)" ]; then
-              git add -A
-              git commit -a -m "Update version $PREV_VERSION -> $NEXT_VERSION" -m "[ci skip]"
-              git push
-              echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-            else
-              echo "Nothing changed. Skipping commit."
-            fi
-          else
-            echo "Skipping committing updated version in config files for SNAPSHOT version."
-          fi
-
-      - name: Publish Release to Gradle Plugin Portal
-        id: publish
-        env:
-          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
-          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
-          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-        run: |
-          ./gradlew publishPlugins \
+    uses: coditory/workflows/.github/workflows/release.yml@v1
+    secrets: inherit
+    with:
+      branch: ${{ inputs.branch }}
+      section: ${{ inputs.section }}
+      version: ${{ inputs.version }}
+      java-version: 21
+      release-command: |
+        ./gradlew publishPlugins \
             -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
             -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET \
             -Pversion=$NEXT_VERSION
-          echo "### Published release version $NEXT_VERSION 🚀" | tee -a $GITHUB_STEP_SUMMARY
-
-      - name: Revert version commit on failure
-        if: failure() && steps.publish.conclusion == 'failure'
-        env:
-          COMMIT_SHA: ${{ steps.commit.outputs.sha }}
-        run: |
-          if [ -n "$COMMIT_SHA" ]; then
-            git revert "$COMMIT_SHA"
-            git push
-            echo "Reverted version commit: $COMMIT_SHA"
-          fi
-
-      - name: Create release tag
-        env:
-          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
-        run: |
-          declare -r TAG_NAME="v$NEXT_VERSION"
-          git tag "$TAG_NAME"
-          git push origin "$TAG_NAME"
-          echo "name=$TAG_NAME" >> $GITHUB_OUTPUT
-
-      - name: Create major branch
-        id: tag
-        env:
-          BRANCH: ${{ inputs.branch }}
-          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
-          PREV_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          declare -r NEXT_MAJOR="$(echo "$NEXT_VERSION" | cut -d. -f1)"
-          declare -r PREV_MAJOR="$(echo "$PREV_VERSION" | cut -d. -f1)"
-          if [ "$NEXT_MAJOR" != "$PREV_MAJOR" ]; then
-            NEW_BRANCH="v${PREV_MAJOR}.x.x"
-            if git rev-parse --verify "$NEW_BRANCH" &>/dev/null; then
-              echo "Repository already contains branch for previous major version: $NEW_BRANCH"
-            else
-              git checkout -b "$NEW_BRANCH"
-              git push origin "$NEW_BRANCH"
-              git checkout "$BRANCH"
-              echo "Created branch for new major version: $NEW_BRANCH"
-              echo "### Created branch for previous major version $NEW_BRANCH  🚀" | tee -a $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "Next and prev major versions are the same: $NEXT_MAJOR"
-          fi
-
-      - name: Generate release notes
-        id: notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PREV_VERSION: ${{ steps.version.outputs.version }}
-          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
-        run: |
-          declare -r PREV_TAG_NAME="$([ "$PREV_VERSION" == "0.0.0" ] && echo "" || echo "v$PREV_VERSION")"
-          declare -r NOTES="$(gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/$GITHUB_REPOSITORY/releases/generate-notes \
-            -f tag_name="v$NEXT_VERSION" \
-            -f previous_tag_name="$PREV_TAG_NAME" \
-            | jq -r '.body')"
-          echo 'notes<<EOF' >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
-
-      - name: Create github release
-        if: steps.notes.conclusion == 'success'
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          body: ${{ steps.notes.outputs.notes }}
-          draft: ${{ inputs.publish == 'SKIP' }}
-          tag: v${{ steps.version.outputs.next_version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
