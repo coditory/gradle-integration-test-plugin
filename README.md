@@ -90,13 +90,13 @@ tasks.withType(Test) {
 ```gradle
 // build.gradle.kts
 plugins {
-    kotlin("jvm") version "2.0.30"
+    kotlin("jvm") version "2.0.21"
     id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
 }
 
 tasks.withType<Test> {
@@ -112,13 +112,13 @@ tasks.withType<Test> {
 ```gradle
 // build.gradle.kts
 plugins {
-    kotlin("jvm") version "2.0.30"
+    kotlin("jvm") version "2.0.21"
     id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.11.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 }
 
