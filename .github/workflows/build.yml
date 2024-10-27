@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     uses: coditory/jvm-workflows/.github/workflows/build.yml@v1
+    # Required to pass codecov token
+    secrets: inherit
     with:
       java-version: 17
       build-command: ./gradlew build coverage
