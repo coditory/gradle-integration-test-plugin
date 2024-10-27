@@ -25,7 +25,7 @@ Update `build.gradle.kts`
 
 ```gradle
 plugins {
-  id("com.coditory.integration-test") version "2.0.2"
+  id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
@@ -48,7 +48,7 @@ See a [project](https://github.com/coditory/gradle-integration-test-plugin-sampl
 // build.gradle.kts
 plugins {
     id("java")
-    id("com.coditory.integration-test") version "2.0.2"
+    id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
@@ -70,7 +70,7 @@ tasks.withType<Test> {
 // build.gradle
 plugins {
     id "groovy"
-    id "com.coditory.integration-test" version "2.0.2"
+    id "com.coditory.integration-test" version "2.0.3"
 }
 
 dependencies {
@@ -90,8 +90,8 @@ tasks.withType(Test) {
 ```gradle
 // build.gradle.kts
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("com.coditory.integration-test") version "2.0.2"
+    kotlin("jvm") version "2.0.30"
+    id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
@@ -112,8 +112,8 @@ tasks.withType<Test> {
 ```gradle
 // build.gradle.kts
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("com.coditory.integration-test") version "2.0.2"
+    kotlin("jvm") version "2.0.30"
+    id("com.coditory.integration-test") version "2.0.3"
 }
 
 dependencies {
