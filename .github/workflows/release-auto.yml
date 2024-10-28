@@ -25,13 +25,16 @@ on:
 
 jobs:
   check:
-    uses: coditory/workflows/.github/workflows/release-auto-check.yml@v1
+    uses: coditory/workflows/.github/workflows/release-check.yml@v1
     secrets: inherit
+    if: |
+      github.event_name != 'workflow_run'
+      || !contains(github.event.workflow_run.head_commit.message, '[ci-skip-build]')
     with:
       security-updates-only: ${{ inputs.security-updates-only || github.event_name == 'workflow_run' }}
 
   release:
     uses: ./.github/workflows/release.yml
     secrets: inherit
-    if: needs.check.outputs.release == 'true'
     needs: check
+    if: needs.check.outputs.release == 'true'
