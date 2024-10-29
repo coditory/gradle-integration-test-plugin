@@ -29,13 +29,11 @@ updates:
       dev-dependencies:
         patterns:
           # gradle plugins
-          - "*ktlint-gradle"
-          - "*dokka-gradle-plugin"
-          - "*kover-gradle-plugin"
-          - "*publish-plugin"
-          - "*maven-plugin"
-          - "*java-gradle-plugin"
-          - "*gradle-integration-test-plugin"
+          - "*kotlin-gradle-plugin"
+          - "com.coditory.integration-test"
+          - "com.gradle.plugin-publish"
+          - "org.jlleitschuh.gradle.ktlint"
+          - "org.jetbrains.kotlinx.kover"
           # test dependencies
           - "org.assertj*"
           - "org.junit*"
