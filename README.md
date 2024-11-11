@@ -1,8 +1,8 @@
 # Integration Test Gradle Plugin
 
 [![Build](https://github.com/coditory/gradle-integration-test-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/coditory/gradle-integration-test-plugin/actions/workflows/build.yml)
-[![Coverage](https://codecov.io/gh/coditory/gradle-integration-test-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/coditory/gradle-integration-test-plugin)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v1.5.0-green.svg)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
+[![Coverage](https://codecov.io/gh/coditory/gradle-integration-test-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/coditory/gradle-integration-test-plugin)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.coditory.integration-test)](https://plugins.gradle.org/plugin/com.coditory.integration-test)
 
 > Single line in build.gradle.kts to enable integration tests in JVM projects
 
