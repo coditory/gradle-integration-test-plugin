@@ -79,12 +79,12 @@ Add plugin jar to the sample project (that uses the tested plugin):
 
 ```kt
 buildscript {
-    dependencies {
-        classpath(files("<PLUGIN_PROJECT_PATH>/build/libs/integration-test-plugin.jar"))
-    }
+  dependencies {
+    classpath(files("<PLUGIN_PROJECT_PATH>/build/libs/integration-test-plugin.jar"))
+  }
 }
 
-apply(plugin = "com.coditory.build")
+apply(plugin = "com.coditory.integration-test")
 ```
 
 ## Validating plugin module metadata

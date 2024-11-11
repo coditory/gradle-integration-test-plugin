@@ -150,6 +150,7 @@ class CommandLineTest {
         // when
         val result = project.runGradle(listOf("check", "-PskipIntegrationTest"))
         // then
+        assertThat(result.task(":check")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
     }
@@ -170,5 +171,14 @@ class CommandLineTest {
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SKIPPED)
         assertThat(result.task(":integration")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
+    @ParameterizedTest(name = "task {0} should be cacheable by gradle configuration cache")
+    @ValueSource(strings = ["test", "integrationTest", "testAll", "check"])
+    fun `should be cacheable by gradle configuration cache`(task: String?) {
+        // when
+        val result = project.runGradle(listOf("--configuration-cache", task!!))
+        // then
+        assertThat(result.task(":$task")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 }

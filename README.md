@@ -18,6 +18,7 @@
   and [Kover](https://github.com/Kotlin/kotlinx-kover).
 - Integrates with test frameworks like [JUnit5](https://junit.org/junit5/), [Spock](https://spockframework.org/) and
   [Kotest](https://kotest.io/).
+- Compatible with [gradle configuration cache](https://docs.gradle.org/current/userguide/configuration_cache.html).
 
 ## Using the plugin
 
