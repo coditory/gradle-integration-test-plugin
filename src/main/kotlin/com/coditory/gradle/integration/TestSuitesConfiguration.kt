@@ -2,8 +2,6 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
-import com.coditory.gradle.integration.TestSkippingConditions.skipIntegrationTest
-import com.coditory.gradle.integration.TestSkippingConditions.skipUnitTest
 import org.gradle.api.Project
 import org.gradle.api.attributes.TestSuiteType
 import org.gradle.api.plugins.JavaBasePlugin
@@ -24,20 +22,20 @@ internal object TestSuitesConfiguration {
         }
     }
 
-    fun apply(project: Project) {
-        setupTestSuite(project)
-        setupTestTask(project)
+    fun apply(project: Project, config: IntegrationTestPluginConfig) {
+        setupTestSuite(project, config)
+        setupTestTask(project, config)
         if (isKotlinProject) {
             configureKotlinCompilation(project)
         }
     }
 
-    private fun setupTestSuite(project: Project) {
+    private fun setupTestSuite(project: Project, config: IntegrationTestPluginConfig) {
         val testing = project.extensions.getByType(TestingExtension::class.java)
         val test = testing.suites.getByName("test") as JvmTestSuite
         test.targets.all { target ->
             target.testTask.configure { task ->
-                task.onlyIf { !skipUnitTest(project) }
+                task.enabled = config.unitTestsEnabled
             }
         }
         testing.suites.register(INTEGRATION, JvmTestSuite::class.java) { testSuite ->
@@ -45,7 +43,7 @@ internal object TestSuitesConfiguration {
             testSuite.targets.all { target ->
                 target.testTask.configure { task ->
                     task.shouldRunAfter(test)
-                    task.onlyIf { !skipIntegrationTest(project) }
+                    task.enabled = config.integrationTestsEnabled
                 }
             }
             setupIntegrationSourceSet(project, testSuite)
@@ -71,17 +69,18 @@ internal object TestSuitesConfiguration {
         integrationSourceSet.runtimeClasspath += testSourceSet.output + mainSourceSet.output
     }
 
-    private fun setupTestTask(project: Project) {
+    private fun setupTestTask(project: Project, config: IntegrationTestPluginConfig) {
         val integrationTestTask = project.tasks.create(INTEGRATION_TEST)
         integrationTestTask.description = "Runs integration test suites."
         integrationTestTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
-        integrationTestTask.onlyIf { !skipIntegrationTest(project) }
+        integrationTestTask.enabled = config.integrationTestsEnabled
         integrationTestTask.dependsOn(INTEGRATION)
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
             .dependsOn(INTEGRATION_TEST)
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
             .dependsOn(INTEGRATION)
-        project.tasks.getByName(INTEGRATION).onlyIf { !skipIntegrationTest(project) }
+        project.tasks.getByName(INTEGRATION)
+            .enabled = config.integrationTestsEnabled
     }
 
     private fun configureKotlinCompilation(project: Project) {

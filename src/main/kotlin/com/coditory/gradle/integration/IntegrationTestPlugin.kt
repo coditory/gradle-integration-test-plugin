@@ -14,8 +14,9 @@ open class IntegrationTestPlugin : Plugin<Project> {
         if (!project.plugins.hasPlugin(JvmTestSuitePlugin::class.java)) {
             project.plugins.apply(JvmTestSuitePlugin::class.java)
         }
-        TestSuitesConfiguration.apply(project)
-        TestAllTaskConfiguration.apply(project)
+        val config = IntegrationTestPluginConfig.resolve(project)
+        TestSuitesConfiguration.apply(project, config)
+        TestAllTaskConfiguration.apply(project, config)
         JacocoTaskConfiguration.apply(project)
     }
 
