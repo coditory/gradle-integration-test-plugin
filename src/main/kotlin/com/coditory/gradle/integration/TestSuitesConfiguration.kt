@@ -70,11 +70,12 @@ internal object TestSuitesConfiguration {
     }
 
     private fun setupTestTask(project: Project, config: IntegrationTestPluginConfig) {
-        val integrationTestTask = project.tasks.create(INTEGRATION_TEST)
-        integrationTestTask.description = "Runs integration test suites."
-        integrationTestTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
-        integrationTestTask.enabled = config.integrationTestsEnabled
-        integrationTestTask.dependsOn(INTEGRATION)
+        project.tasks.register(INTEGRATION_TEST) { integrationTestTask ->
+            integrationTestTask.description = "Runs integration test suites."
+            integrationTestTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
+            integrationTestTask.enabled = config.integrationTestsEnabled
+            integrationTestTask.dependsOn(INTEGRATION)
+        }
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
             .dependsOn(INTEGRATION_TEST)
         project.tasks.getByName(JavaBasePlugin.CHECK_TASK_NAME)
