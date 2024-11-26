@@ -31,7 +31,7 @@ class PlatformDependencyTest {
                     integrationImplementation("org.springframework.boot:spring-boot-starter-test")
                 }
 
-                tasks.withType<Test> {
+                tasks.withType<Test>().configureEach {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")

@@ -30,10 +30,11 @@ class TestProject(private val project: Project) : Project by project {
     }
 
     private fun gradleRunner(project: Project, arguments: List<String>, gradleVersion: String? = null): GradleRunner {
+        // clean is required so tasks are not cached
+        val args = if (arguments.contains("clean")) arguments else listOf("clean") + arguments
         val builder = GradleRunner.create()
             .withProjectDir(project.projectDir)
-            // clean is required so tasks are not cached
-            .withArguments(listOf("clean") + arguments)
+            .withArguments(args)
             .withPluginClasspath()
             .forwardOutput()
         if (!gradleVersion.isNullOrBlank() && gradleVersion != "current") {
