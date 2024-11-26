@@ -33,7 +33,7 @@ class LombokTest {
                     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                 }
 
-                tasks.withType<Test> {
+                tasks.withType<Test>().configureEach {
                     useJUnitPlatform()
                     testLogging {
                         events("passed", "failed", "skipped")

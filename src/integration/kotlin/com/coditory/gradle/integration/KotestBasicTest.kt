@@ -43,7 +43,7 @@ class KotestBasicTest {
                         testImplementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
                     }
 
-                    tasks.withType<Test> {
+                    tasks.withType<Test>().configureEach {
                         useJUnitPlatform()
                         testLogging {
                             events("passed", "failed", "skipped")
