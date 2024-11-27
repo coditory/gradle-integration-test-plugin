@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
     testImplementation("org.assertj:assertj-core:3.26.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
