@@ -1,16 +1,17 @@
 plugins {
-    id("com.gradle.enterprise").version("3.12.2")
+    id("com.gradle.develocity") version ("3.18.2")
 }
 
 rootProject.name = "integration-test-plugin"
 
-gradleEnterprise {
+develocity {
     buildScan {
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        termsOfServiceAgree = "yes"
+        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+        termsOfUseAgree = "yes"
 
+        publishing.onlyIf { false }
         if (!System.getenv("CI").isNullOrEmpty()) {
-            publishAlways()
+            publishing.onlyIf { true }
             tag("CI")
         }
     }

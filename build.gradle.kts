@@ -38,7 +38,7 @@ ktlint {
     version = "1.4.0"
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     testLogging {
         events("passed", "failed", "skipped")
@@ -71,7 +71,8 @@ gradlePlugin {
 // Prints project version.
 // Usage: ./gradlew version --quiet
 tasks.register("version") {
+    val version = project.version
     doLast {
-        println(project.version)
+        println(version)
     }
 }
