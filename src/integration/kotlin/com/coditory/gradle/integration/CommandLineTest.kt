@@ -6,6 +6,7 @@ import com.coditory.gradle.integration.base.TestProject
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -79,6 +80,12 @@ class CommandLineTest {
                 )
                 .build()
         }
+    }
+
+    @AfterEach
+    fun cleanProjects() {
+        project.clean()
+        failingProject.clean()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")

@@ -29,9 +29,11 @@ class TestProject(private val project: Project) : Project by project {
         this.projectDir.deleteRecursively()
     }
 
-    private fun gradleRunner(project: Project, arguments: List<String>, gradleVersion: String? = null): GradleRunner {
-        // clean is required so tasks are not cached
-        val args = if (arguments.contains("clean")) arguments else listOf("clean") + arguments
+    fun clean() {
+        this.runGradle(listOf("clean"))
+    }
+
+    private fun gradleRunner(project: Project, args: List<String>, gradleVersion: String? = null): GradleRunner {
         val builder = GradleRunner.create()
             .withProjectDir(project.projectDir)
             .withArguments(args)

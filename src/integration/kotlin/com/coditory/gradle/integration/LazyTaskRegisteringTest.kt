@@ -2,6 +2,7 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.api.Test
 
@@ -34,6 +35,11 @@ class LazyTaskRegisteringTest {
                     """,
             )
             .build()
+    }
+
+    @AfterEach
+    fun cleanProject() {
+        project.clean()
     }
 
     @Test
