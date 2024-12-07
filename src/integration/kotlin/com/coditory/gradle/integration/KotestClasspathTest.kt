@@ -6,6 +6,7 @@ import com.coditory.gradle.integration.base.TestProject
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -163,6 +164,11 @@ class KotestClasspathTest {
             }
             return builder.build()
         }
+    }
+
+    @AfterEach
+    fun cleanProject() {
+        project.clean()
     }
 
     @ParameterizedTest(name = "should read files from classpath for gradle {0}")

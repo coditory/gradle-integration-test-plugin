@@ -5,6 +5,7 @@ import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPOR
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -123,6 +124,11 @@ class LombokTest {
                 """,
             )
             .build()
+    }
+
+    @AfterEach
+    fun cleanProject() {
+        project.clean()
     }
 
     @ParameterizedTest(name = "should run unit tests and integration tests on check command for gradle {0}")

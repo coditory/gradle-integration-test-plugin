@@ -5,6 +5,7 @@ import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPOR
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -87,6 +88,11 @@ class JacocoBasedTest {
             .build()
     }
 
+    @AfterEach
+    fun cleanProject() {
+        project.clean()
+    }
+
     @ParameterizedTest(name = "should aggregate coverage from unit and integration tests when using Jacoco {0}")
     @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should aggregate coverage from unit and integration tests when using Jacoco`(gradleVersion: String?) {
@@ -95,6 +101,19 @@ class JacocoBasedTest {
         // then
         assertThat(result.task(":test")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
         assertThat(result.task(":integrationTest")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(project.readFileFromBuildDir("reports/jacoco/test/jacocoTestReport.xml"))
+            // missed method is the init
+            .contains("<counter type=\"METHOD\" missed=\"1\" covered=\"2\"/>")
+    }
+
+    @ParameterizedTest(name = "should aggregate coverage from unit and integration tests when using Jacoco after tests {0}")
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
+    fun `should aggregate coverage from unit and integration tests when using Jacoco after tests`(gradleVersion: String?) {
+        // given
+        project.runGradle(listOf("check"), gradleVersion)
+        // when
+        project.runGradle(listOf("jacocoTestReport"), gradleVersion)
+        // then
         assertThat(project.readFileFromBuildDir("reports/jacoco/test/jacocoTestReport.xml"))
             // missed method is the init
             .contains("<counter type=\"METHOD\" missed=\"1\" covered=\"2\"/>")
