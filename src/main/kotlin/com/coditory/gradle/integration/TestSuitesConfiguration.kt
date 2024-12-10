@@ -57,11 +57,14 @@ internal object TestSuitesConfiguration {
         val testSourceSet = sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
         val integrationSourceSet = testSuite.sources
 
-        project.configurations.getByName(integrationSourceSet.compileClasspathConfigurationName)
-            .extendsFrom(project.configurations.getByName(testSourceSet.compileClasspathConfigurationName))
+        project.configurations.getByName(integrationSourceSet.implementationConfigurationName)
+            .extendsFrom(project.configurations.getByName(testSourceSet.implementationConfigurationName))
 
         project.configurations.getByName(integrationSourceSet.runtimeOnlyConfigurationName)
-            .extendsFrom(project.configurations.getByName(testSourceSet.runtimeClasspathConfigurationName))
+            .extendsFrom(project.configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
+
+        project.configurations.getByName(integrationSourceSet.compileOnlyConfigurationName)
+            .extendsFrom(project.configurations.getByName(testSourceSet.compileOnlyConfigurationName))
 
         project.configurations.getByName(integrationSourceSet.annotationProcessorConfigurationName)
             .extendsFrom(project.configurations.getByName(testSourceSet.annotationProcessorConfigurationName))
