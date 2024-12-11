@@ -25,11 +25,6 @@ class ConfigurationInheritanceTest {
                     mavenCentral()
                 }
 
-                dependencies {
-                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
-                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
-                }
-
                 testing {
                     suites {
                         register<JvmTestSuite>("customTest")
@@ -40,13 +35,12 @@ class ConfigurationInheritanceTest {
                     extendsFrom(configurations.integrationImplementation.get())
                 }
                 val customTestRuntimeOnly by configurations.getting {
-
                     extendsFrom(configurations.integrationRuntimeOnly.get())
                 }
 
                 dependencies {
                     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
-                    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+                    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
                     // sample dependency
                     implementation("com.google.code.gson:gson:${Versions.gson}")
                 }
