@@ -7,11 +7,11 @@ function run_ktlint {
     exit 1
   fi
   # https://pinterest.github.io/ktlint/0.49.0/install/cli/#git-hooks
-  KT_FILES=$(git diff --name-only --cached --relative --diff-filter=ACMR -- '*.kt' '*.kts' | sed 's| |\\ |g')
+  KT_FILES=$(git diff --name-only --cached --relative --diff-filter=ACMR -- '*.kt' '*.kts')
   if [ -n "$KT_FILES" ]; then
     echo -e "${BLUE}Ktlint: linting $(echo "$KT_FILES" | wc -l) files${ENDCOLOR}"
     start="$(date +%s)"
-    echo -n "$KT_FILES" | ktlint --relative --format --patterns-from-stdin
+    echo -n "$KT_FILES" | tr '\n' ',' | ktlint --relative --format --patterns-from-stdin=','
     echo  -e  "${GREEN}Ktlint: finished in $(($(date +%s) - start))s${ENDCOLOR}"
     echo "$KT_FILES" | xargs git add
   fi

@@ -21,7 +21,7 @@ Before writing a commit message read [this article](https://chris.beams.io/posts
 
 Before pushing any changes make sure project builds without errors with:
 
-```
+```sh
 ./gradlew build
 ```
 
@@ -32,7 +32,7 @@ That are enforced by ktlint and [.editorconfig](../.editorconfig).
 
 You can check style with:
 
-```
+```sh
 ./gradlew ktlintCheck
 ```
 
@@ -42,7 +42,7 @@ Use [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) for testing.
 
 Uou can check coverage in `build/reports/kover/` after running:
 
-```
+```sh
 ./gradlew test coverage
 ```
 
