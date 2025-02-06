@@ -21,6 +21,7 @@ class TestAllTaskConfigurationTest {
         assertThat(task.description).isEqualTo("Runs all test suites.")
         assertThat(task.group).isEqualTo(VERIFICATION_GROUP)
         assertThat(task.enabled).isEqualTo(true)
+        assertThat(task).isInstanceOf(org.gradle.api.tasks.testing.Test::class.java)
     }
 
     private fun getTestAllTask(): Task {
