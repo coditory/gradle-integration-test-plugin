@@ -9,6 +9,7 @@ import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.testing.Test
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.testing.base.TestingExtension
 
@@ -74,7 +75,7 @@ internal object TestSuitesConfiguration {
     }
 
     private fun setupTestTask(project: Project, config: IntegrationTestPluginConfig) {
-        project.tasks.register(INTEGRATION_TEST) { integrationTestTask: Task ->
+        project.tasks.register(INTEGRATION_TEST, Test::class.java) { integrationTestTask: Task ->
             integrationTestTask.description = "Runs integration test suites."
             integrationTestTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
             integrationTestTask.enabled = config.integrationTestsEnabled

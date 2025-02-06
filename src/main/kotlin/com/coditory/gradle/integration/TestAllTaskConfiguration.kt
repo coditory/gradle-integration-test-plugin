@@ -9,11 +9,12 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 internal object TestAllTaskConfiguration {
     fun apply(project: Project, config: IntegrationTestPluginConfig) {
-        project.tasks.register(TEST_ALL_TASK_NAME) { testAllTask: Task ->
+        val testTasks = project.tasks.withType(Test::class.java).names
+        project.tasks.register(TEST_ALL_TASK_NAME, Test::class.java) { testAllTask: Task ->
             testAllTask.description = "Runs all test suites."
             testAllTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
             testAllTask.enabled = config.allTestTaskEnabled
-            project.tasks.withType(Test::class.java).names.forEach {
+            testTasks.forEach {
                 testAllTask.dependsOn(it)
             }
             testAllTask.dependsOn(INTEGRATION_TEST)
