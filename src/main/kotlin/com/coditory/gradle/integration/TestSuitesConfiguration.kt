@@ -19,7 +19,7 @@ internal object TestSuitesConfiguration {
         try {
             Class.forName("org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension")
             true
-        } catch (e: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
             false
         }
     }
@@ -75,7 +75,7 @@ internal object TestSuitesConfiguration {
     }
 
     private fun setupTestTask(project: Project, config: IntegrationTestPluginConfig) {
-        project.tasks.register(INTEGRATION_TEST, Test::class.java) { integrationTestTask: Task ->
+        project.tasks.register(INTEGRATION_TEST, DummyTestTask::class.java) { integrationTestTask: Task ->
             integrationTestTask.description = "Runs integration test suites."
             integrationTestTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
             integrationTestTask.enabled = config.integrationTestsEnabled
@@ -84,9 +84,6 @@ internal object TestSuitesConfiguration {
         project.tasks.named(JavaBasePlugin.CHECK_TASK_NAME) { checkTask ->
             checkTask.dependsOn(INTEGRATION_TEST)
             checkTask.dependsOn(INTEGRATION)
-        }
-        project.tasks.named(INTEGRATION) { integrationTask ->
-            integrationTask.enabled = config.integrationTestsEnabled
         }
     }
 
@@ -97,5 +94,21 @@ internal object TestSuitesConfiguration {
             val test = kotlin.target.compilations.getByName(SourceSet.TEST_SOURCE_SET_NAME)
             it.associateWith(test)
         }
+    }
+}
+
+// Test task type required only for better intellij integration
+// See:
+// https://github.com/coditory/gradle-integration-test-plugin/pull/179
+// https://github.com/coditory/gradle-integration-test-plugin/issues/181
+//
+// Thanks to DummyTestTask type Intellij:
+// - displays testAll task results (unit + integration tests together) in a typical test tree
+// - applies proper styles to the task in the gradle tasks window
+// Drawbacks:
+// - Gradle test configuration is executed for instances of Test and DummyTestTasks but there was no observable time penalty
+abstract class DummyTestTask : Test() {
+    override fun executeTests() {
+        // deliberately empty
     }
 }
