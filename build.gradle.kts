@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.10"
-    id("com.coditory.integration-test") version "2.2.4"
+    // id("com.coditory.integration-test") version "2.2.5"
     id("java-gradle-plugin")
     id("maven-publish")
     id("com.gradle.plugin-publish") version "1.3.1"

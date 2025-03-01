@@ -4,6 +4,9 @@
 build
 !gradle/wrapper/gradle-wrapper.jar
 
+# Eclipse
+bin
+
 # IntelliJ
 out
 *.iml
