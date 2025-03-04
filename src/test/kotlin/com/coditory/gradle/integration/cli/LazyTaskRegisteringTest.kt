@@ -1,4 +1,4 @@
-package com.coditory.gradle.integration
+package com.coditory.gradle.integration.cli
 
 import com.coditory.gradle.integration.base.TestProjectBuilder
 import org.assertj.core.api.Assertions.assertThat

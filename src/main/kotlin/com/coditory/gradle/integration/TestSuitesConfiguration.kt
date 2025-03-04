@@ -4,7 +4,6 @@ import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATI
 import com.coditory.gradle.integration.IntegrationTestPlugin.Companion.INTEGRATION_TEST
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.attributes.TestSuiteType
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.jvm.JvmTestSuite
@@ -41,7 +40,6 @@ internal object TestSuitesConfiguration {
             }
         }
         testing.suites.register(INTEGRATION, JvmTestSuite::class.java) { testSuite ->
-            testSuite.testType.set(TestSuiteType.INTEGRATION_TEST)
             testSuite.targets.all { target ->
                 target.testTask.configure { task ->
                     task.shouldRunAfter(test)

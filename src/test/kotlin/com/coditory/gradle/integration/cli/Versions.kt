@@ -1,4 +1,4 @@
-package com.coditory.gradle.integration
+package com.coditory.gradle.integration.cli
 
 object Versions {
     val kotlin = "2.0.20"

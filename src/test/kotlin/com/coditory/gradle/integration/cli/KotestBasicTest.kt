@@ -1,4 +1,4 @@
-package com.coditory.gradle.integration
+package com.coditory.gradle.integration.cli
 
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class JUnitBasicTest {
+class KotestBasicTest {
     companion object {
         @AutoClose
         private val project = createProject()
@@ -22,7 +22,7 @@ class JUnitBasicTest {
         private fun createProject(passingIntgTests: Boolean = true): TestProject {
             val name = listOf(
                 "project",
-                JUnitBasicTest::class.simpleName,
+                KotestBasicTest::class.simpleName,
                 if (passingIntgTests) "passing" else "failing",
             ).joinToString("-")
             return TestProjectBuilder
@@ -30,6 +30,7 @@ class JUnitBasicTest {
                 .withBuildGradleKts(
                     """
                     plugins {
+                        kotlin("jvm") version "${Versions.kotlin}"
                         id("com.coditory.integration-test")
                     }
 
@@ -40,6 +41,7 @@ class JUnitBasicTest {
                     dependencies {
                         testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
                         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
+                        testImplementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
                     }
 
                     tasks.withType<Test>().configureEach {
@@ -51,30 +53,28 @@ class JUnitBasicTest {
                     }
                     """,
                 ).withFile(
-                    "src/integration/java/TestIntgSpec.java",
+                    "src/integration/kotlin/TestIntgSpec.kt",
                     """
-                    import org.junit.jupiter.api.Test;
-                    import static org.junit.jupiter.api.Assertions.assertEquals;
+                    import io.kotest.core.spec.style.FreeSpec
+                    import org.junit.jupiter.api.Assertions.assertEquals
 
-                    public class TestIntgSpec {
-                        @Test
-                        public void shouldPass() {
-                            assertEquals(true, $passingIntgTests);
+                    class TestIntgSpec : FreeSpec({
+                        "should pass" {
+                            assertEquals(true, $passingIntgTests)
                         }
-                    }
+                    })
                     """,
                 ).withFile(
-                    "src/test/java/TestUnitSpec.java",
+                    "src/test/kotlin/TestUnitSpec.kt",
                     """
-                    import org.junit.jupiter.api.Test;
-                    import static org.junit.jupiter.api.Assertions.assertEquals;
+                    import io.kotest.core.spec.style.FreeSpec
+                    import org.junit.jupiter.api.Assertions.assertEquals
 
-                    public class TestUnitSpec {
-                        @Test
-                        public void shouldPass() {
-                            assertEquals(true, true);
+                    class TestUnitSpec : FreeSpec({
+                        "should pass" {
+                            assertEquals(4, 2 + 2)
                         }
-                    }
+                    })
                     """,
                 )
                 .build()
