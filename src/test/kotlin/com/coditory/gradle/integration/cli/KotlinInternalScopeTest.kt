@@ -1,4 +1,4 @@
-package com.coditory.gradle.integration
+package com.coditory.gradle.integration.cli
 
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.integration.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
