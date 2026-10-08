@@ -54,11 +54,8 @@ internal data class IntegrationTestPluginConfig(
         }
 
         private fun hasPropertyFlag(project: Project, name: String): Boolean {
-            if (project.properties.containsKey(name)) {
-                val value = project.properties[name]
-                return value == null || !value.toString().equals("false", true)
-            }
-            return false
+            val property = project.findProperty(name)
+            return property != null && !property.toString().equals("false", true)
         }
 
         private fun hasExcludedTask(project: Project, name: String): Boolean {
